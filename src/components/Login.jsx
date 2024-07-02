@@ -9,12 +9,12 @@ const Login = () => {
       <DarkModeToggle />
       <div
         className={`h-screen flex justify-center items-center  ${
-          isDark ? "bg-black" : "bg-gray-100"
+          isDark ? "bg-gray-900" : "bg-gray-100"
         } `}
       >
         <form
-          className={`flex flex-col w-screen md:w-4/5 lg:w-2/5 xl:w-1/5 rounded shadow p-6 ${
-            isDark ? "bg-gray-900" : "bg-white"
+          className={`flex flex-col w-screen md:w-4/5 lg:w-2/5 xl:w-1/5 rounded shadow p-6  ${
+            isDark ? "bg-gray-800" : "bg-white"
           } `}
         >
           <label
@@ -29,7 +29,7 @@ const Login = () => {
             type="email"
             id="email"
             className={`p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-100 focus:shadow-lg transition duration-300 ease-in-out ${
-              isDark ? "bg-black text-gray-50" : "border"
+              isDark ? "bg-gray-900 text-gray-50" : "border"
             }`}
           />
           <label
@@ -44,7 +44,7 @@ const Login = () => {
             type="password"
             id="password"
             className={`p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-100 focus:shadow-lg transition duration-300 ease-in-out ${
-              isDark ? "bg-black text-gray-50" : "border"
+              isDark ? "bg-gray-900 text-gray-50" : "border"
             }`}
           />
           <button

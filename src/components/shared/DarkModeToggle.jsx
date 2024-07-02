@@ -21,7 +21,7 @@ const DarkModeToggle = () => {
       className="relative align-middle rounded-md focus:ring-0 transition-all duration-500 p-4"
     >
       <svg
-        className={`w-6 h-6 ${isDark ? "text-white" : "text-black"} `}
+        className={`w-6 h-6 ${isDark ? "text-white" : "text-blue-900"} `}
         fill="currentColor"
         viewBox="0 0 24 24"
       >

@@ -10,7 +10,7 @@ const Header = ({ onBurgerClick }) => {
   return (
     <div
       className={`flex items-center justify-between lg:justify-end p-4 ${
-        isDark ? "bg-gray-700  text-white" : "bg-purple-50  text-black"
+        isDark ? "bg-gray-900  text-white" : "bg-white  text-black"
       } `}
     >
       <button className="lg:hidden" onClick={onBurgerClick}>

@@ -38,7 +38,7 @@ const Notifications = () => {
       {isDropdownOpen && (
         <div className="absolute right-0 mt-2 w-64 bg-white text-black rounded-lg shadow-lg">
           <div className="p-4">
-            <h4 className="font-bold mb-2">Notifications</h4>
+            <h4 className="font-bold mb-2 border-b-2 pb-2">Notifications</h4>
             <ul>
               <li className="p-2 hover:bg-gray-200">Notification 1</li>
               <li className="p-2 hover:bg-gray-200">Notification 2</li>
