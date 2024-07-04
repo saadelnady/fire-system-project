@@ -1,32 +1,36 @@
 import React, { useState } from "react";
 import SideBar from "./shared/SideBar";
 import Header from "./shared/Header";
-import Home from "./Home";
-import Owners from "./Owners";
-import Projects from "./Projects";
-import Types from "./Types";
+import Home from "./home/Home.jsx";
+import Owners from "./owners/Owners.jsx";
+import Projects from "./projects/Projects.jsx";
+import Types from "./types/Types.jsx";
 import Profile from "./profile/Profile";
+import AddNewOwner from "./addOwner/AddOwner.jsx";
+import AddProject from "./addProject/AddProject.jsx";
 import { Route, Routes } from "react-router-dom";
 import { useSelector } from "react-redux";
 
 const Admin = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const { isDark } = useSelector((state) => state.mode);
+  const { isDark } = useSelector((state) => state.modeReducer);
 
   return (
-    <div className="flex h-screen">
+    <div className="flex min-h-[100vh]">
       <SideBar
         isSidebarOpen={isSidebarOpen}
         onBurgerClick={() => setIsSidebarOpen(!isSidebarOpen)}
       />
 
-      <div className="flex-1 flex flex-col">
+      <div className="w-full flex flex-col">
         <Header onBurgerClick={() => setIsSidebarOpen(!isSidebarOpen)} />
-        <div className={`flex-1 ${isDark ? "bg-gray-800" : "bg-gray-100"}`}>
+        <div className={` ${isDark ? "bg-gray-800" : "bg-gray-100"} px-4 `}>
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/owners" element={<Owners />} />
+            <Route path="/addNewOwner" element={<AddNewOwner />} />
             <Route path="/projects" element={<Projects />} />
+            <Route path="/addProject" element={<AddProject />} />
             <Route path="/types" element={<Types />} />
             <Route path="/profile" element={<Profile />} />
           </Routes>

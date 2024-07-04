@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 
 const SideBar = ({ isSidebarOpen, onBurgerClick }) => {
-  const { isDark } = useSelector((state) => state.mode);
+  const { isDark } = useSelector((state) => state.modeReducer);
   const location = useLocation();
   const [toggleStates, setToggleStates] = useState({
     isOwnersActive: false,
@@ -17,9 +17,9 @@ const SideBar = ({ isSidebarOpen, onBurgerClick }) => {
   };
   return (
     <div
-      className={`transform text-white top-0 left-0 w-64  ${
+      className={`transform text-white top-0 left-0 w-64 min-h-full  ${
         isDark ? "bg-gray-900" : "bg-blue-900 "
-      } fixed h-full overflow-auto z-50 lg:static lg:transform-none transition-transform duration-300 ease-in-out ${
+      } fixed overflow-auto z-50 lg:static lg:transform-none transition-transform duration-300 ease-in-out ${
         isSidebarOpen ? "translate-x-0" : "-translate-x-full"
       } lg:translate-x-0`}
     >
@@ -51,7 +51,7 @@ const SideBar = ({ isSidebarOpen, onBurgerClick }) => {
       <ul className="space-y-4 p-4">
         <li>
           <Link
-            className={`font-bold text-xl flex items-center px-3 py-2 rounded ${
+            className={`font-bold text-l flex items-center px-3 py-2 rounded ${
               location.pathname === "/" ? "bg-blue-300 text-white" : ""
             }`}
             to="/"
@@ -75,7 +75,7 @@ const SideBar = ({ isSidebarOpen, onBurgerClick }) => {
         </li>
 
         <li
-          className="font-bold text-xl flex items-center px-3 py-2 rounded  cursor-pointer "
+          className="font-bold text-l flex items-center px-3 py-2 rounded  cursor-pointer "
           onClick={() => {
             HandleToggle("isOwnersActive");
           }}
@@ -141,9 +141,9 @@ const SideBar = ({ isSidebarOpen, onBurgerClick }) => {
         </li>
         {toggleStates.isOwnersActive && (
           <ul className="sub-nav">
-            <li className="fs-5 ms-3">
+            <li className=" ms-3">
               <Link
-                className={`font-bold text-xl flex items-center px-3 py-2 rounded ${
+                className={`font-bold text-l flex items-center px-3 py-2 rounded ${
                   location.pathname === "/owners"
                     ? "bg-blue-300 text-white"
                     : ""
@@ -153,10 +153,10 @@ const SideBar = ({ isSidebarOpen, onBurgerClick }) => {
                 All owners
               </Link>
             </li>
-            <li className="fs-5 ms-3 mt-2">
+            <li className=" ms-3 mt-2">
               <Link
                 to="/addNewOwner"
-                className={`font-bold text-xl flex items-center px-3 py-2 rounded ${
+                className={`font-bold text-l flex items-center px-3 py-2 rounded ${
                   location.pathname === "/addNewOwner"
                     ? "bg-blue-300 text-white"
                     : ""
@@ -168,7 +168,7 @@ const SideBar = ({ isSidebarOpen, onBurgerClick }) => {
           </ul>
         )}
         <li
-          className="font-bold text-xl flex items-center px-3 py-2 rounded  cursor-pointer "
+          className="font-bold text-l flex items-center px-3 py-2 rounded  cursor-pointer "
           onClick={() => {
             HandleToggle("isProjectsActive");
           }}
@@ -241,9 +241,9 @@ const SideBar = ({ isSidebarOpen, onBurgerClick }) => {
         </li>
         {toggleStates.isProjectsActive && (
           <ul className="sub-nav">
-            <li className="fs-5 ms-3">
+            <li className=" ms-3">
               <Link
-                className={`font-bold text-xl flex items-center px-3 py-2 rounded ${
+                className={`font-bold text-l flex items-center px-3 py-2 rounded ${
                   location.pathname === "/projects"
                     ? "bg-blue-300 text-white"
                     : ""
@@ -253,11 +253,11 @@ const SideBar = ({ isSidebarOpen, onBurgerClick }) => {
                 Projects
               </Link>
             </li>
-            <li className="fs-5 ms-3 mt-2">
+            <li className=" ms-3 mt-2">
               <Link
-                to="/addNewProject"
-                className={`font-bold text-xl flex items-center px-3 py-2 rounded ${
-                  location.pathname === "/addNewProject"
+                to="/addProject"
+                className={`font-bold text-l flex items-center px-3 py-2 rounded ${
+                  location.pathname === "/addProject"
                     ? "bg-blue-300 text-white"
                     : ""
                 }`}
@@ -269,7 +269,7 @@ const SideBar = ({ isSidebarOpen, onBurgerClick }) => {
         )}
         <li>
           <Link
-            className={`font-bold text-xl flex items-center px-3 py-2 rounded ${
+            className={`font-bold text-l flex items-center px-3 py-2 rounded ${
               location.pathname === "/types" ? "bg-blue-300 text-white" : ""
             }`}
             to="/types"

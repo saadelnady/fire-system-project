@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 
 const Notifications = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const { isDark } = useSelector((state) => state.mode);
+  const { isDark } = useSelector((state) => state.modeReducer);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);

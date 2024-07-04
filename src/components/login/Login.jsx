@@ -1,8 +1,8 @@
 import React from "react";
-import DarkModeToggle from "./shared/DarkModeToggle.jsx";
+import DarkModeToggle from "../shared/DarkModeToggle.jsx";
 import { useSelector } from "react-redux";
 const Login = () => {
-  const { isDark } = useSelector((state) => state.mode);
+  const { isDark } = useSelector((state) => state.modeReducer);
 
   return (
     <>
@@ -13,7 +13,7 @@ const Login = () => {
         } `}
       >
         <form
-          className={`flex flex-col w-screen md:w-4/5 lg:w-2/5 xl:w-1/5 rounded shadow p-6  ${
+          className={`flex flex-col w-screen md:w-4/5 lg:w-2/5 :w-1/5 rounded shadow p-6  ${
             isDark ? "bg-gray-800" : "bg-white"
           } `}
         >

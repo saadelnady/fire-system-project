@@ -3,9 +3,9 @@ import userImg from "../../assets/imgs/ic-user.png";
 import { useSelector } from "react-redux";
 import { useState } from "react";
 import PasswordInput from "./PasswordInput";
-import ProfileImageComponent from "./ProfileImage";
-import FormFieldsComponent from "./FormFieldsComponent";
+import ImageComponent from "../shared/ImageComponent";
 import * as Yup from "yup";
+import FormField from "../shared/FormField";
 
 const validationSchema = Yup.object().shape({
   userName: Yup.string()
@@ -21,7 +21,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const Profile = () => {
-  const { isDark } = useSelector((state) => state.mode);
+  const { isDark } = useSelector((state) => state.modeReducer);
   const [isVisible, setIsVisible] = useState({
     currentPassword: true,
     newPassword: true,
@@ -56,30 +56,49 @@ const Profile = () => {
   };
 
   return (
-    <div className="px-4">
+    <div>
       <h2
-        className={`font-bold text-center text-2xl ${
+        className={`font-bold text-end  text-2xl ${
           isDark ? "text-white" : "text-black"
         }`}
       >
         Welcome admin
       </h2>
       <div
-        className={`shadow-md p-4 mt-4 rounded ${
+        className={`shadow-md mt-4 rounded ${
           isDark ? "bg-gray-900 text-white" : "bg-white text-black"
         }`}
       >
-        <h3 className="font-semibold mb-4 text-2xl">Edit your profile</h3>
+        <h3 className="font-semibold mb-4 text-2xl p-4">Edit your profile</h3>
         <form onSubmit={formik.handleSubmit} className="p-3">
-          <ProfileImageComponent
+          <ImageComponent
             formik={formik}
-            userImg={userImg}
+            img={userImg}
             getIconColor={getIconColor}
-            isDark={isDark}
             handleImageChange={handleImageChange}
           />
 
-          <FormFieldsComponent isDark={isDark} formik={formik} />
+          <div className="flex flex-wrap items-center justify-evenly">
+            <FormField
+              id="userName"
+              label="Username"
+              type="text"
+              formik={formik}
+            />
+            <FormField id="email" label="Email" type="email" formik={formik} />
+            <FormField
+              id="mobilePhone"
+              label="Mobile phone"
+              type="text"
+              formik={formik}
+            />
+            <FormField
+              id="address"
+              label="Address"
+              type="text"
+              formik={formik}
+            />
+          </div>
 
           <div className="flex flex-wrap items-center justify-evenly">
             <PasswordInput
@@ -113,7 +132,7 @@ const Profile = () => {
           </div>
           <button
             type="submit"
-            className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 ms-auto block"
+            className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 mx-auto block"
           >
             Save changes
           </button>

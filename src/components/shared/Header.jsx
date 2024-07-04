@@ -5,11 +5,11 @@ import User from "./User";
 import { useSelector } from "react-redux";
 
 const Header = ({ onBurgerClick }) => {
-  const { isDark } = useSelector((state) => state.mode);
+  const { isDark } = useSelector((state) => state.modeReducer);
 
   return (
     <div
-      className={`flex items-center justify-between lg:justify-end p-4 ${
+      className={`flex items-center justify-between lg:justify-end px-4 py-3 shadow ${
         isDark ? "bg-gray-900  text-white" : "bg-white  text-black"
       } `}
     >

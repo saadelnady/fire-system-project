@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { toggleDarkMode } from "../../store/actions/mode/modeActionsCreators";
 
 const DarkModeToggle = () => {
-  const { isDark } = useSelector((state) => state.mode);
+  const { isDark } = useSelector((state) => state.modeReducer);
   const dispatch = useDispatch();
   // dark mode ?
   const darkModeIconPath =
