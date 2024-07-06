@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -11,6 +12,7 @@ const validationSchema = Yup.object().shape({
 
 const AddNewType = ({ handler, activeForm }) => {
   const { isDark } = useSelector((state) => state.modeReducer);
+  const [isClosing, setIsClosing] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -24,22 +26,30 @@ const AddNewType = ({ handler, activeForm }) => {
   });
 
   const closeHandler = () => {
+    setIsClosing(true);
     setTimeout(() => {
       handler();
-    }, 300); // Duration should match the animation duration
+      setIsClosing(false); // Reset for next time the modal opens
+    }, 300); // Match this duration with the animation duration
   };
+
+  useEffect(() => {
+    if (activeForm) {
+      setIsClosing(false);
+    }
+  }, [activeForm]);
 
   return (
     <div
       className={`fixed top-0 left-0 z-100 w-full min-h-[100vh] flex justify-center items-center ${
-        activeForm ? "fade-in" : "fade-out"
+        activeForm && !isClosing ? "fade-in" : "fade-out"
       }`}
       style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
     >
       <div
         className={`transform transition-transform duration-300 font-bold w-[90%] md:w-[50%] mx-auto p-5 rounded ${
           isDark ? "text-white bg-gray-800" : "text-black bg-gray-100"
-        } ${activeForm ? "slide-in" : "slide-out"}`}
+        } ${activeForm && !isClosing ? "slide-in" : "slide-out"}`}
       >
         <div className="flex justify-between items-center">
           <h3 className="text-3xl font-semibold">Add New Type</h3>
