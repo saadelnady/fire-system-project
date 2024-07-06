@@ -68,7 +68,7 @@ const AddNewOwner = () => {
             type="text"
             formik={formik}
           />
-          <FormField id="address" label="Email" type="text" formik={formik} />
+          <FormField id="address" label="Address" type="text" formik={formik} />
 
           <button
             type="submit"

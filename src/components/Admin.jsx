@@ -3,6 +3,7 @@ import SideBar from "./shared/SideBar";
 import Header from "./shared/Header";
 import Home from "./home/Home.jsx";
 import Owners from "./owners/Owners.jsx";
+import Owner from "./owner/Owner.jsx";
 import Projects from "./projects/Projects.jsx";
 import Types from "./types/Types.jsx";
 import Profile from "./profile/Profile";
@@ -28,9 +29,13 @@ const Admin = () => {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/owners" element={<Owners />} />
+            <Route path="/owners/:ownerId" element={<Owner />} />
+
             <Route path="/addNewOwner" element={<AddNewOwner />} />
+            <Route path="/addNewOwner/:ownerId" element={<AddNewOwner />} />
             <Route path="/projects" element={<Projects />} />
-            <Route path="/addProject" element={<AddProject />} />
+
+            <Route path="/addProject/:projectId" element={<AddProject />} />
             <Route path="/types" element={<Types />} />
             <Route path="/profile" element={<Profile />} />
           </Routes>

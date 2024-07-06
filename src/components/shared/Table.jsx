@@ -1,10 +1,14 @@
 import React from "react";
 import { useSelector } from "react-redux";
 
-const Table = ({ cols, rows }) => {
+const Table = ({ cols, rows, width }) => {
   const { isDark } = useSelector((state) => state.modeReducer);
   return (
-    <div className=" overflow-x-scroll sm:overflow-x-auto ">
+    <div
+      className={`overflow-x-scroll sm:overflow-x-auto ${
+        width ? width : "w-full"
+      } `}
+    >
       {rows && rows?.length > 0 ? (
         <table
           className={`min-w-full divide-y divide-gray-200 mt-4 rounded mb-[65px] ${

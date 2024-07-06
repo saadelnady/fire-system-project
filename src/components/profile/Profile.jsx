@@ -57,20 +57,17 @@ const Profile = () => {
   };
 
   return (
-    <div>
+    <div
+      className={`font-bold  min-h-[100vh] ${
+        isDark ? "text-white" : "text-black"
+      }`}
+    >
       <div
         className={`shadow-md mt-4 rounded ${
           isDark ? "bg-gray-900 text-white" : "bg-white text-black"
         }`}
       >
-        <h2
-          className={`px-4 text-2xl font-bold ${
-            isDark ? "text-white" : "text-black"
-          }`}
-        >
-          Welcome admin
-        </h2>
-        <h3 className="font-semibold mb-4 text-2xl px-4">Edit your profile</h3>
+        <h3 className="font-semibold py-4 text-2xl px-4">Edit your profile</h3>
 
         <form onSubmit={formik.handleSubmit} className="p-3">
           <ImageComponent

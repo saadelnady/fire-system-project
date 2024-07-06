@@ -1,5 +1,4 @@
-// Owners.js
-import React, { useState } from "react";
+import { useState } from "react";
 import Table from "../shared/Table";
 import { owners } from "../../assets/data/staticData";
 import { useSelector } from "react-redux";
@@ -79,7 +78,7 @@ const Owners = () => {
       render: (row) => (
         <Link
           className={`rounded flex w-fit text-white bg-blue-800 py-1 px-3`}
-          to={`${row?.id}`}
+          to={`${row?._id}`}
         >
           <svg
             fill="#fff"
@@ -106,7 +105,7 @@ const Owners = () => {
     {
       header: "Actions",
 
-      render: (row) => <DropdownMenu menuItems={menuItems} isDark={isDark} />,
+      render: (row) => <DropdownMenu menuItems={menuItems} row={row} />,
     },
   ];
 

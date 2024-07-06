@@ -17,7 +17,7 @@ const SideBar = ({ isSidebarOpen, onBurgerClick }) => {
   };
   return (
     <div
-      className={`transform text-white top-0 left-0 w-64 min-h-full  ${
+      className={`transform text-white top-0 left-0 w-64 min-h-[100vh]  ${
         isDark ? "bg-gray-900" : "bg-blue-900 "
       } absolute overflow-auto z-100 lg:static lg:transform-none transition-transform duration-300 ease-in-out ${
         isSidebarOpen ? "translate-x-0" : "-translate-x-full"

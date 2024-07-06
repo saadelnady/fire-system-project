@@ -1,8 +1,10 @@
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-const DropdownMenu = ({ menuItems, isDark }) => {
-  const getIconColor = () => (isDark ? "#eee" : "#000000");
+const DropdownMenu = ({ menuItems, row }) => {
+  const { isDark } = useSelector((state) => state.modeReducer);
 
+  const getIconColor = () => (isDark ? "#eee" : "#000000");
   return (
     <div className="relative group">
       <svg
@@ -36,7 +38,10 @@ const DropdownMenu = ({ menuItems, isDark }) => {
             key={index}
             className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
           >
-            <Link to={item.link} className="flex items-center">
+            <Link
+              to={`${item?.link}/${row?._id}`}
+              className="flex items-center"
+            >
               <svg
                 width="20px"
                 viewBox="0 0 24 24"
