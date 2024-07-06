@@ -23,7 +23,7 @@ const SideBar = ({ isSidebarOpen, onBurgerClick }) => {
         isSidebarOpen ? "translate-x-0" : "-translate-x-full"
       } lg:translate-x-0`}
     >
-      <div className="flex justify-end p-4 lg:hidden">
+      <div className="flex justify-end p-4    lg:hidden">
         <svg
           viewBox="0 0 16 16"
           version="1.1"
