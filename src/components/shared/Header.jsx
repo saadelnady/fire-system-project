@@ -9,7 +9,7 @@ const Header = ({ onBurgerClick }) => {
 
   return (
     <div
-      className={`flex items-center justify-between lg:justify-end px-4 py-3 shadow z-100 ${
+      className={`flex items-center justify-between lg:justify-end px-4 py-3 shadow z-50 ${
         isDark ? "bg-gray-900  text-white" : "bg-white  text-black"
       } `}
     >

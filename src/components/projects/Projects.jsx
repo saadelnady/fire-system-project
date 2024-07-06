@@ -48,7 +48,6 @@ const Projects = () => {
     },
     {
       header: "Actions",
-
       render: (row) => <DropdownMenu menuItems={menuItems} isDark={isDark} />,
     },
   ];
@@ -78,17 +77,17 @@ const Projects = () => {
 
   return (
     <div
-      className={`font-bold text-end pb-[70px] min-h-[100vh] ${
+      className={`font-bold pb-[70px] min-h-[100vh] ${
         isDark ? "text-white" : "text-black"
       }`}
     >
-      <div className="flex items-center justify-center mt-4 flex-wrap">
+      <div className="flex items-center justify-between mt-4 flex-wrap">
         <Search handler={searchProjectsHandler} searchTerm={searchTerm} />
         <Link
-          className={`rounded flex mt-4 sm:mt-0  p-2 text-white bg-blue-800 `}
-          to={"/addNewOwner"}
+          className={`rounded flex p-2 text-white bg-blue-800 `}
+          to={"/addproject"}
         >
-          Add New Owner
+          Add new project
         </Link>
       </div>
 

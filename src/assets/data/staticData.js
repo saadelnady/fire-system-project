@@ -140,17 +140,23 @@ export const projectsData = [
   },
 ];
 // ===========================================================
-export const types = [
+export const typesData = [
   {
     _id: 1,
-    name: "type-1",
+    type_name: "type-1",
+    type_description:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore dolorumaperiam hic odio adipisci facilis explicabo neque amet voluptatibusvoluptate.",
   },
   {
     _id: 2,
-    name: "type-2",
+    type_name: "type-2",
+    type_description:
+      " Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore dolorum aperiam hic odio adipisci facilis explicabo neque amet voluptatibusvoluptate.",
   },
   {
     _id: 3,
-    name: "type-3",
+    type_name: "type-3",
+    type_description:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore dolorum aperiam hic odio adipisci facilis explicabo neque amet voluptatibus voluptate.",
   },
 ];

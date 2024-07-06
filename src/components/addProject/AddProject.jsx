@@ -5,7 +5,7 @@ import { useFormik } from "formik";
 import FormField from "../shared/FormField";
 import SelectInput from "../shared/SelectInput";
 import TextArea from "../shared/TextArea.jsx";
-import { owners, types } from "../../assets/data/staticData";
+import { owners, typesData } from "../../assets/data/staticData";
 import * as Yup from "yup";
 import { useEffect } from "react";
 import Attachments from "../shared/Attacments.jsx";
@@ -20,10 +20,10 @@ const AddProject = () => {
     image: owner?.image, // Assuming each owner has an image property
   }));
 
-  const typesOptions = types.map((type) => ({
+  const typesOptions = typesData.map((type) => ({
     ...type,
     value: type?._id,
-    label: `${type?.name}`,
+    label: `${type?.type_name}`,
   }));
 
   const formik = useFormik({
@@ -283,12 +283,7 @@ const AddProject = () => {
             type="date"
             formik={formik}
           />
-          <TextArea
-            id="comment"
-            label="Comment"
-            type="textarea"
-            formik={formik}
-          />
+          <TextArea id="comment" label="Comment" formik={formik} />
         </div>
         <button
           type="submit"

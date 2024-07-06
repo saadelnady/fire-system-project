@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import ErrorMessage from "./ErrorMessage";
 
-const TextArea = ({ id, label, type, formik }) => {
+const TextArea = ({ id, label, formik }) => {
   const { isDark } = useSelector((state) => state.modeReducer);
 
   return (
@@ -12,7 +12,6 @@ const TextArea = ({ id, label, type, formik }) => {
       <textarea
         id={id}
         name={id}
-        type={type}
         onChange={formik.handleChange}
         onBlur={formik.handleBlur}
         value={formik.values[id]}

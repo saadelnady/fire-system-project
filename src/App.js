@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 function App() {
   const { isDark } = useSelector((state) => state.modeReducer);
   return (
-    <div className={`App ${isDark ? "bg-gray-900" : "bg-white"}  `}>
+    <div className={`App  ${isDark ? "bg-gray-900" : "bg-white"}  `}>
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/*" element={<Admin />} />
