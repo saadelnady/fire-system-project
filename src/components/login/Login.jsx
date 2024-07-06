@@ -8,13 +8,13 @@ const Login = () => {
     <>
       <DarkModeToggle />
       <div
-        className={`h-screen flex justify-center items-center  ${
-          isDark ? "bg-gray-900" : "bg-gray-100"
+        className={`h-screen flex justify-center items-center ${
+          isDark ? "bg-gray-800" : "bg-gray-100"
         } `}
       >
         <form
-          className={`flex flex-col w-screen md:w-4/5 lg:w-2/5 :w-1/5 rounded shadow p-6  ${
-            isDark ? "bg-gray-800" : "bg-white"
+          className={`flex flex-col w-screen md:w-4/5 lg:w-2/5 xl:w-1/5 rounded shadow p-6  ${
+            isDark ? "bg-gray-700" : "bg-white"
           } `}
         >
           <label
@@ -47,11 +47,7 @@ const Login = () => {
               isDark ? "bg-gray-900 text-gray-50" : "border"
             }`}
           />
-          <button
-            className={`border mx-auto mt-4 font-bold px-4 py-2 rounded ${
-              isDark ? "text-gray-50" : "text-black"
-            }`}
-          >
+          <button className="bg-blue-500 mt-5 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 mx-auto block">
             Login
           </button>
         </form>

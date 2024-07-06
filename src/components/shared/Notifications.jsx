@@ -1,16 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 
 const Notifications = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { isDark } = useSelector((state) => state.modeReducer);
-
+  const dropdownRef = useRef(null);
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
+  // Close dropdown when clicking outside of it
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
   return (
-    <div className="relative">
+    <div
+      className={`relative ${
+        isDark ? "bg-gray-900  text-white" : "bg-white  text-black"
+      }`}
+    >
       <button onClick={toggleDropdown}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -36,7 +54,12 @@ const Notifications = () => {
         </span>
       </button>
       {isDropdownOpen && (
-        <div className="absolute right-0 mt-2 w-64 bg-white text-black rounded-lg shadow-lg">
+        <div
+          ref={dropdownRef}
+          className={`absolute right-0 mt-2 w-64 rounded-lg shadow-lg ${
+            isDark ? "bg-gray-800 text-white" : "bg-white text-black"
+          }`}
+        >
           <div className="p-4">
             <h4 className="font-bold mb-2 border-b-2 pb-2">Notifications</h4>
             <ul>

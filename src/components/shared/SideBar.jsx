@@ -250,7 +250,7 @@ const SideBar = ({ isSidebarOpen, onBurgerClick }) => {
                 }`}
                 to="/projects"
               >
-                Projects
+                All Projects
               </Link>
             </li>
             <li className=" ms-3 mt-2">

@@ -2,7 +2,7 @@ import React from "react";
 import ErrorMessage from "../shared/ErrorMessage";
 import { useSelector } from "react-redux";
 
-const FormField = ({ id, label, type, formik, isDisabled, handleChange }) => {
+const Attachments = ({ id, label, formik, isDisabled, handleChange }) => {
   const { isDark } = useSelector((state) => state.modeReducer);
   return (
     <div className="flex flex-col w-full md:w-[40%] h-[110px]">
@@ -12,15 +12,15 @@ const FormField = ({ id, label, type, formik, isDisabled, handleChange }) => {
       <input
         id={id}
         name={id}
-        type={type}
+        type="file"
         onChange={handleChange || formik.handleChange}
-        // onChange={handleChange ? handleChange : formik.handleChange}
         onBlur={formik.handleBlur}
-        value={formik.values[id]}
         disabled={isDisabled}
         className={`p-2 rounded focus:outline-none focus:ring-2 border focus:ring-blue-100 focus:shadow-lg transition duration-300 ease-in-out ${
           isDark ? "bg-gray-900 text-white" : "border"
         } ${isDisabled ? "disabled" : null} `}
+        multiple
+        accept=".jpg, .jpeg, .png, .pdf" // Example: Accept specific file types
       />
       <ErrorMessage
         touched={formik.touched}
@@ -31,4 +31,4 @@ const FormField = ({ id, label, type, formik, isDisabled, handleChange }) => {
   );
 };
 
-export default FormField;
+export default Attachments;

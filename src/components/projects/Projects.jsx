@@ -32,7 +32,7 @@ const Projects = () => {
         <div className={`flex items-center`}>
           <img
             className={`w-[50px] h-[50px] me-3 border rounded-full`}
-            src={row?.image}
+            src={row?.project_image}
             alt={row?.name}
           />
           <div>

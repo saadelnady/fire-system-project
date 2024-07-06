@@ -60,7 +60,7 @@ const Owners = () => {
         <div className={`flex items-center`}>
           <img
             className={`w-[50px] h-[50px] me-3 border rounded-full`}
-            src={row?.image}
+            src={row?.owner_image}
             alt={row?.name}
           />
           <div>

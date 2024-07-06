@@ -2,6 +2,7 @@ import { useSelector } from "react-redux";
 
 const ImageComponent = ({ formik, img, getIconColor, handleImageChange }) => {
   const { isDark } = useSelector((state) => state.modeReducer);
+
   return (
     <div className="relative w-[200px] h-[200px] rounded-full overflow-hidden mx-auto mb-4 shadow">
       <label
@@ -12,9 +13,10 @@ const ImageComponent = ({ formik, img, getIconColor, handleImageChange }) => {
       >
         <img
           src={
-            formik.values.image && formik.values.image instanceof Blob
+            formik.values.imageUrl ||
+            (formik.values.image && formik.values.image instanceof Blob
               ? URL.createObjectURL(formik.values.image)
-              : img
+              : img)
           }
           alt="profile-img"
           className="w-full h-full object-cover"

@@ -1,14 +1,35 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import icUser from "../../assets/imgs/ic-user.png";
+import { useSelector } from "react-redux";
 const User = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+  const { isDark } = useSelector((state) => state.modeReducer);
+  const getIconColor = () => (isDark ? "#eee" : "#000000");
 
+  // Close dropdown when clicking outside of it
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
   return (
-    <div className="relative">
+    <div
+      className={`relative ${
+        isDark ? "bg-gray-900  text-white" : "bg-white  text-black"
+      }`}
+    >
       <button
         onClick={toggleDropdown}
         className="focus:outline-none border rounded-full w-12"
@@ -20,14 +41,19 @@ const User = () => {
         />
       </button>
       {isDropdownOpen && (
-        <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-lg shadow-lg">
+        <div
+          ref={dropdownRef}
+          className={`absolute right-0 mt-2  w-48 rounded-lg shadow-lg ${
+            isDark ? "bg-gray-800 text-white" : "bg-white text-black"
+          }`}
+        >
           <Link
             to="/profile"
             className="flex items-center px-4 py-2 hover:bg-gray-200"
           >
             <svg
               viewBox="0 0 24 24"
-              fill="none"
+              fill={getIconColor()}
               xmlns="http://www.w3.org/2000/svg"
               height="30px"
               width="30px"
@@ -68,13 +94,10 @@ const User = () => {
             Profile
           </Link>
 
-          <Link
-            to="/logout"
-            className="flex items-center px-4 py-2 hover:bg-gray-200"
-          >
+          <Link className="flex items-center px-4 py-2 hover:bg-gray-200">
             <svg
               viewBox="0 0 24 24"
-              fill="none"
+              fill={getIconColor()}
               xmlns="http://www.w3.org/2000/svg"
               height="30px"
               width="30px"

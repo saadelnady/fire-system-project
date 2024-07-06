@@ -29,7 +29,7 @@ const Profile = () => {
   });
   const formik = useFormik({
     initialValues: {
-      image: null,
+      user_image: null,
       userName: "",
       email: "",
       mobilePhone: "",
@@ -49,27 +49,29 @@ const Profile = () => {
     const file = event.target.files[0]; // Get the first file from the input
     // Check if the selected file is valid
     if (file && file instanceof Blob) {
-      formik.setFieldValue("image", file); // Update Formik field value for 'image'
-      // Use createObjectURL only if file is a valid Blob
-      URL.createObjectURL(file);
+      formik.setFieldValue("user_image", file); // Update Formik field value for 'image'
+      // Create object URL for the selected file
+      const imageUrl = URL.createObjectURL(file);
+      formik.setFieldValue("imageUrl", imageUrl); // Optionally store the URL for preview
     }
   };
 
   return (
     <div>
-      <h2
-        className={`font-bold text-end  text-2xl ${
-          isDark ? "text-white" : "text-black"
-        }`}
-      >
-        Welcome admin
-      </h2>
       <div
         className={`shadow-md mt-4 rounded ${
           isDark ? "bg-gray-900 text-white" : "bg-white text-black"
         }`}
       >
-        <h3 className="font-semibold mb-4 text-2xl p-4">Edit your profile</h3>
+        <h2
+          className={`px-4 text-2xl font-bold ${
+            isDark ? "text-white" : "text-black"
+          }`}
+        >
+          Welcome admin
+        </h2>
+        <h3 className="font-semibold mb-4 text-2xl px-4">Edit your profile</h3>
+
         <form onSubmit={formik.handleSubmit} className="p-3">
           <ImageComponent
             formik={formik}
