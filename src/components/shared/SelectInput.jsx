@@ -64,7 +64,7 @@ const SelectInput = ({
         onChange={handleChange}
         isSearchable
         styles={customStyles}
-        components={customComponents} // Pass customComponents here
+        components={customComponents}
         value={options.find((option) => option.value === formik.values[id])}
       />
       <ErrorMessage

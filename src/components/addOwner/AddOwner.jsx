@@ -29,8 +29,7 @@ const AddNewOwner = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      console.log("Form values:", values);
-      // Add your submit logic here
+      // console.log("Form values:", values);
     },
   });
   const getIconColor = () => (isDark ? "#eee" : "#000000");

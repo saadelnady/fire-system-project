@@ -9,9 +9,11 @@ import { owners, typesData } from "../../assets/data/staticData";
 import * as Yup from "yup";
 import { useEffect } from "react";
 import Attachments from "../shared/Attacments.jsx";
+import { useParams } from "react-router-dom";
 
 const AddProject = () => {
   const { isDark } = useSelector((state) => state.modeReducer);
+  const params = useParams();
 
   const ownerOptions = owners.map((owner) => ({
     ...owner,
@@ -69,8 +71,7 @@ const AddProject = () => {
         .min(0, "Received must be a positive number"),
     }),
     onSubmit: (values) => {
-      console.log("Form values:", values);
-      // Add your submit logic here
+      // console.log("Form values:", values);
     },
   });
 
@@ -91,11 +92,19 @@ const AddProject = () => {
       const { payment, received } = formik.values;
       const balance = payment - received;
       formik.setFieldValue("balance", balance);
-      console.log("balance ===>", balance);
     };
     calculateBalance();
   }, [formik.values.payment, formik.values.received]);
-  // Call this function whenever you want to recalculate the balance payment, such as on form submission or when payment/received values change.
+
+  useEffect(() => {
+    console.log(ownerOptions);
+    console.log(params.ownerId);
+    const selectedOwner = ownerOptions.find(
+      (option) => option.value == params.ownerId
+    );
+    formik.setFieldValue("client_id", selectedOwner);
+    console.log(selectedOwner);
+  }, [params]);
   const handleAttachmentsChange = (event) => {
     const files = Array.from(event.target.files); // Convert FileList to array
 
@@ -103,13 +112,12 @@ const AddProject = () => {
   };
 
   const handleOwnerChange = (selectedOption) => {
+    console.log("selectedOption ===>", selectedOption);
     formik.setFieldValue("client_id", selectedOption?.value);
-    console.log("Selected option:", selectedOption.value);
   };
 
   const handleTypeChange = (selectedOption) => {
     formik.setFieldValue("type_id", selectedOption?.value);
-    console.log("Selected option:", selectedOption.value);
   };
 
   const customComponents = {

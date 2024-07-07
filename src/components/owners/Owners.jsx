@@ -111,7 +111,7 @@ const Owners = () => {
 
   return (
     <div
-      className={`font-bold   pb-[70px] min-h-[100vh] ${
+      className={`font-bold pb-[70px] min-h-[100vh] ${
         isDark ? "text-white" : "text-black"
       }`}
     >

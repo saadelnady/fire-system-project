@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 
-const Home = () => {
+const Notifications = () => {
   const { isDark } = useSelector((state) => state.modeReducer);
 
   return (
@@ -11,4 +11,4 @@ const Home = () => {
     ></div>
   );
 };
-export default Home;
+export default Notifications;

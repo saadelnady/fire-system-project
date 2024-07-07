@@ -9,6 +9,7 @@ import Types from "./types/Types.jsx";
 import Profile from "./profile/Profile";
 import AddNewOwner from "./addOwner/AddOwner.jsx";
 import AddProject from "./addProject/AddProject.jsx";
+import Notifications from "./notifications/Notifications.jsx";
 import { Route, Routes } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -17,7 +18,7 @@ const Admin = () => {
   const { isDark } = useSelector((state) => state.modeReducer);
 
   return (
-    <div className="flex min-h-[100vh]">
+    <div className="flex relative min-h-[100vh]">
       <SideBar
         isSidebarOpen={isSidebarOpen}
         onBurgerClick={() => setIsSidebarOpen(!isSidebarOpen)}
@@ -33,11 +34,16 @@ const Admin = () => {
 
             <Route path="/addNewOwner" element={<AddNewOwner />} />
             <Route path="/addNewOwner/:ownerId" element={<AddNewOwner />} />
+
             <Route path="/projects" element={<Projects />} />
 
-            <Route path="/addProject/:projectId" element={<AddProject />} />
+            <Route path="/addproject" element={<AddProject />} />
+            <Route path="/addproject/:projectId" element={<AddProject />} />
+            <Route path="/addproject:/ownerId" element={<AddProject />} />
+
             <Route path="/types" element={<Types />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/notifications" element={<Notifications />} />
           </Routes>
         </div>
       </div>

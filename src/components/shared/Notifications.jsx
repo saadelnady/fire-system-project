@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
 
 const Notifications = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -62,12 +63,32 @@ const Notifications = () => {
         >
           <div className="p-4">
             <h4 className="font-bold mb-2 border-b-2 pb-2">Notifications</h4>
-            <ul>
-              <li className="p-2 hover:bg-gray-200">Notification 1</li>
-              <li className="p-2 hover:bg-gray-200">Notification 2</li>
-              <li className="p-2 hover:bg-gray-200">Notification 3</li>
+            <ul className="border-b-2 ">
+              <li
+                className={`p-2 hover:text-black ${
+                  isDark ? "hover:bg-gray-900" : "hover:bg-gray-100"
+                } `}
+              >
+                Notification 1
+              </li>
+              <li
+                className={`p-2 hover:text-black ${
+                  isDark ? "hover:bg-gray-900" : "hover:bg-gray-100"
+                } `}
+              >
+                Notification 2
+              </li>
+              <li
+                className={`p-2 hover:text-black ${
+                  isDark ? "hover:bg-gray-900" : "hover:bg-gray-100"
+                } `}
+              >
+                Notification 3
+              </li>
             </ul>
-            <button className="text-blue-500">View All Notifications</button>
+            <Link to={"/notifications"} className="text-blue-500 mt-3 block ">
+              View All Notifications
+            </Link>
           </div>
         </div>
       )}

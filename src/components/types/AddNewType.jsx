@@ -21,7 +21,7 @@ const AddNewType = ({ handler, activeForm }) => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      console.log("Form values:", values);
+      // console.log("Form values:", values);
     },
   });
 
@@ -47,7 +47,7 @@ const AddNewType = ({ handler, activeForm }) => {
       style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
     >
       <div
-        className={`transform transition-transform duration-300 font-bold w-[90%] md:w-[50%] mx-auto p-5 rounded ${
+        className={`transform transition-transform duration-300 font-bold w-[90%] md:w-[50%] lg:w-[30%] mx-auto p-5 rounded ${
           isDark ? "text-white bg-gray-800" : "text-black bg-gray-100"
         } ${activeForm && !isClosing ? "slide-in" : "slide-out"}`}
       >

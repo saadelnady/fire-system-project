@@ -17,13 +17,13 @@ const SideBar = ({ isSidebarOpen, onBurgerClick }) => {
   };
   return (
     <div
-      className={`transform text-white top-0 left-0 w-64 min-h-[100vh]  ${
-        isDark ? "bg-gray-900" : "bg-blue-900 "
-      } absolute overflow-auto z-100 lg:static lg:transform-none transition-transform duration-300 ease-in-out ${
+      className={`transform text-white top-0 left-0 w-64 h-screen lg:h-auto fixed overflow-auto z-100 lg:relative lg:transform-none transition-transform duration-300 ease-in-out ${
+        isDark ? "bg-gray-900" : "bg-blue-900"
+      } ${
         isSidebarOpen ? "translate-x-0" : "-translate-x-full"
       } lg:translate-x-0`}
     >
-      <div className="flex justify-end p-4    lg:hidden">
+      <div className="flex justify-end p-4 lg:hidden">
         <svg
           viewBox="0 0 16 16"
           version="1.1"
@@ -32,6 +32,7 @@ const SideBar = ({ isSidebarOpen, onBurgerClick }) => {
           width="20px"
           height="20px"
           onClick={onBurgerClick}
+          className="cursor-pointer"
         >
           <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
           <g

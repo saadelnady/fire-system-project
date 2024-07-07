@@ -6,7 +6,7 @@ const Search = ({ handler, searchTerm }) => {
   const { isDark } = useSelector((state) => state.modeReducer);
 
   return (
-    <div>
+    <div className="my-5">
       <label htmlFor="search" className="me-3">
         Search
       </label>
