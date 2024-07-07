@@ -198,3 +198,30 @@ export const typesData = [
       "Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore dolorum aperiam hic odio adipisci facilis explicabo neque amet voluptatibus voluptate.",
   },
 ];
+export const notifications = [
+  {
+    _id: "1",
+    message: "You have a new friend request.",
+    status: "unread",
+  },
+  {
+    _id: "2",
+    message: "Your password was successfully changed.",
+    status: "read",
+  },
+  {
+    _id: "3",
+    message: "New comment on your post.",
+    status: "unread",
+  },
+  {
+    _id: "4",
+    message: "Your subscription will expire soon.",
+    status: "unread",
+  },
+  {
+    _id: "5",
+    message: "You have a new message.",
+    status: "read",
+  },
+];
