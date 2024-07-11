@@ -17,7 +17,7 @@ export const fetchNotifications = ({
       if (limit) params.append("limit", limit);
       if (page) params.append("page", page);
       if (search) params.append("search", search);
-
+      params.append("send_status", true);
       const response = await getData(`/v1/notifications/?${params.toString()}`);
       dispatch(actionsCreators.getNotificationsSuccess(response));
     } catch (error) {
@@ -33,6 +33,7 @@ export const fetchDropdownNotifications = ({
   page = "",
   search = "",
   ownerId,
+  callBackFn,
 } = {}) => {
   return async (dispatch) => {
     dispatch(actionsCreators.getNotificationsDropdown());
@@ -43,7 +44,7 @@ export const fetchDropdownNotifications = ({
       if (limit) params.append("limit", limit);
       if (page) params.append("page", page);
       if (search) params.append("search", search);
-
+      params.append("action_status", false);
       const response = await getData(`/v1/notifications/?${params.toString()}`);
       dispatch(actionsCreators.getNotificationsDropdownSuccess(response));
     } catch (error) {
@@ -53,7 +54,12 @@ export const fetchDropdownNotifications = ({
 };
 // ===========================================================================
 
-export const editNotification = (notificationId, toast, callBackFn) => {
+export const editNotification = (
+  notificationId,
+  toast,
+  callBackFn,
+  getNotificationsInDropDown
+) => {
   return async (dispatch) => {
     dispatch(actionsCreators.putNotification());
     try {
@@ -63,6 +69,7 @@ export const editNotification = (notificationId, toast, callBackFn) => {
       console.log("response ===>", response);
       dispatch(actionsCreators.putNotificationSuccess(response));
       callBackFn();
+      getNotificationsInDropDown();
       showToast(toast, response?.message, "success");
     } catch (error) {
       console.log("error ===>", error);

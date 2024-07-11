@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import Pagination from "../shared/Pagination";
 import {
   editNotification,
+  fetchDropdownNotifications,
   fetchNotifications,
 } from "../../store/actions/notificatios/notificationActions";
 import formattedDate from "../../helpers/formattedDate";
@@ -26,7 +27,6 @@ const Notifications = () => {
   const searchNotificationsHandler = (event) => {
     const searchTerm = event.target.value;
     setSearchTerm(searchTerm);
-  
   };
 
   const onClickSearchIcon = () => {
@@ -50,7 +50,27 @@ const Notifications = () => {
   }, [dispatch, currentPage, itemsPerPage]);
 
   useEffect(() => {
-    if(searchTerm==='')
+    if (searchTerm === "")
+      dispatch(
+        fetchNotifications({
+          page: currentPage,
+          limit: itemsPerPage,
+          search: searchTerm,
+        })
+      );
+  }, [searchTerm]);
+
+  const checkNotificationHandler = (notificationId) => {
+    dispatch(
+      editNotification(
+        notificationId,
+        toast,
+        callBackFn,
+        getNotificationsInDropDown
+      )
+    );
+  };
+  const callBackFn = () => {
     dispatch(
       fetchNotifications({
         page: currentPage,
@@ -58,14 +78,10 @@ const Notifications = () => {
         search: searchTerm,
       })
     );
-  }, [searchTerm]);
-
-  const checkNotificationHandler = (notificationId) => {
-    dispatch(editNotification(notificationId, toast, callBackFn));
   };
-  const callBackFn = () => {
+  const getNotificationsInDropDown = () => {
     dispatch(
-      fetchNotifications({
+      fetchDropdownNotifications({
         page: currentPage,
         limit: itemsPerPage,
         search: searchTerm,
@@ -127,7 +143,11 @@ const Notifications = () => {
         isDark ? "text-white" : "text-black"
       }`}
     >
-      <Search handler={searchNotificationsHandler} onClickSearchIcon={onClickSearchIcon} searchTerm={searchTerm} />
+      <Search
+        handler={searchNotificationsHandler}
+        onClickSearchIcon={onClickSearchIcon}
+        searchTerm={searchTerm}
+      />
       <Table cols={columns} rows={notifications?.list} />
       {}
       {notifications?.total_pages > 1 && (

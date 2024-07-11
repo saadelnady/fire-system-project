@@ -190,7 +190,7 @@ const AddProject = () => {
       formData.append("file_number", values.file_number);
     }
 
-    if (values.attachments ) {
+    if (values.attachments) {
       formData.append("attachments", values.attachments);
     }
     if (values.balance_date) {
@@ -221,9 +221,12 @@ const AddProject = () => {
   };
 
   const handleImageChange = (event) => {
-    console.log("🚀 ~ handleImageChange ~ event:", event)
+    console.log("🚀 ~ handleImageChange ~ event:", event);
     const file = event.target.files[0]; // Get the first file from the input
-    console.log("🚀 ~ handleImageChange ~ event.target.files:", event.target.files)
+    console.log(
+      "🚀 ~ handleImageChange ~ event.target.files:",
+      event.target.files
+    );
     // Check if the selected file is valid
     if (file && file instanceof Blob) {
       formik.setFieldValue("project_img", file); // Update Formik field value for 'image'
@@ -240,12 +243,18 @@ const AddProject = () => {
   const handleTypeChange = (selectedOption) => {
     formik.setFieldValue("type_id", selectedOption?.value);
   };
+  // const handleAttachmentsChange = (event) => {
+  //   console.log("🚀 ~ handleAttachmentsChange ~ event:", event)
+  //   formik.setFieldValue("attachments", event.target.files);
+  //   console.log("🚀 ~ handleAttachmentsChange ~ event.target.files:", event.target.files)
+  // };
   const handleAttachmentsChange = (event) => {
-    console.log("🚀 ~ handleAttachmentsChange ~ event:", event)
-    formik.setFieldValue("attachments", event.target.files[0]);
-    console.log("🚀 ~ handleAttachmentsChange ~ event.target.files:", event.target.files)
-  };
+    const selectedFiles = Array.from(event.target.files);
+    console.log("selectedFiles ====>", selectedFiles);
+    formik.setFieldValue("attachments", [selectedFiles]);
 
+    // Clear the file input value to allow re-selecting the same image
+  };
   // to get project data
   useEffect(() => {
     if (params?.projectId) {
@@ -392,7 +401,7 @@ const AddProject = () => {
     Option: ({ innerRef, innerProps, data }) => (
       <div ref={innerRef} {...innerProps} className={`flex items-center`}>
         <img
-          src={data?.profile_img}
+          src={data?.profile_img || userImg}
           alt={data?.label}
           style={{
             width: 50,

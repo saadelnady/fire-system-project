@@ -37,7 +37,7 @@ const User = () => {
     >
       <button
         onClick={toggleDropdown}
-        className="focus:outline-none border rounded-full w-[80px] h-[80px]"
+        className="focus:outline-none border rounded-full w-[50px] h-[50px]"
       >
         <img
           src={user?.profile_img || icUser}

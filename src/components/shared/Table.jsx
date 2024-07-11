@@ -41,7 +41,10 @@ const Table = ({ cols, rows, width }) => {
                 }`}
               >
                 {cols.map((col, colIndex) => (
-                  <td key={colIndex} className="p-3 text-sm whitespace-nowrap">
+                  <td
+                    key={colIndex}
+                    className="p-4 w-[500px]  text-sm whitespace-nowrap"
+                  >
                     {col.render ? col.render(row, rowIndex) : row[col.accessor]}
                   </td>
                 ))}
