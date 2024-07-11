@@ -2,8 +2,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-// export const serverUrl = "https://api.fireeaglema.com";
-export const serverUrl = "http://localhost:4000";
+export const serverUrl = "https://api.fireeaglema.com";
 
 const handleRequest = async (method, URL, data = null, customHeaders = {}) => {
   try {
