@@ -94,7 +94,9 @@ const AddNewOwner = () => {
   };
 
   useEffect(() => {
-    dispatch(fetchOwner(ownerId));
+    if (ownerId) {
+      dispatch(fetchOwner(ownerId));
+    }
   }, [dispatch, ownerId]);
   useEffect(() => {
     if (ownerId && isObjectNotEmpty(owner)) {
@@ -105,8 +107,16 @@ const AddNewOwner = () => {
         address: owner?.address,
         phone: owner?.phone,
       });
+    } else {
+      formik.setValues({
+        imageUrl: "",
+        name: "",
+        email: "",
+        address: "",
+        phone: "",
+      });
     }
-  }, [owner]);
+  }, [owner, ownerId]);
   const handleImageChange = (event) => {
     const file = event.target.files[0]; // Get the first file from the input
     // Check if the selected file is valid
