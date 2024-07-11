@@ -67,7 +67,6 @@ const ownerReducer = (state = initialState, action) => {
       return {
         ...state,
         isLoading: false,
-        owners: [...state.owners, action?.payLoad],
       };
 
     case OWNER_ACTIONS_TYPES.POST_OWNER_FAIL:

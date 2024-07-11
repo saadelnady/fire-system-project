@@ -62,14 +62,15 @@ export const fetchOwnerProjects = ({
   };
 };
 /* ================================================================================================== */
-export const addOwner = ({ formData, toast }) => {
+export const addOwner = ({ formData, toast, navigate }) => {
   return async (dispatch) => {
     dispatch(actionsCreators.addOwner(formData));
     try {
       const response = await postData(`/v1/clients`, formData);
       if (response?.status) {
-        dispatch(actionsCreators.addOwnerSuccess(response?.data));
+        dispatch(actionsCreators.addOwnerSuccess(response));
         showToast(toast, response?.message, "success");
+        navigate();
       }
     } catch (error) {
       console.log(error);
