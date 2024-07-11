@@ -191,7 +191,10 @@ const AddProject = () => {
     }
 
     if (values.attachments) {
-      formData.append("attachments", values.attachments);
+      values.attachments.forEach((attachment) =>
+        formData.append("attachments", attachment)
+      );
+      // formData.append("attachments", values.attachments);
     }
     if (values.balance_date) {
       formData.append("balance_date", values.balance_date);
@@ -251,9 +254,7 @@ const AddProject = () => {
   const handleAttachmentsChange = (event) => {
     const selectedFiles = Array.from(event.target.files);
     console.log("selectedFiles ====>", selectedFiles);
-    formik.setFieldValue("attachments", [selectedFiles]);
-
-    // Clear the file input value to allow re-selecting the same image
+    formik.setFieldValue("attachments", selectedFiles);
   };
   // to get project data
   useEffect(() => {
