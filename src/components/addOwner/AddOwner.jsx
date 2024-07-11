@@ -1,16 +1,29 @@
 import ImageComponent from "../shared/ImageComponent";
 import userImg from "../../assets/imgs/ic-user.png";
 import { useFormik } from "formik";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import * as Yup from "yup";
 import FormField from "../shared/FormField";
+import { toast } from "react-toastify";
+import {
+  addOwner,
+  editOwner,
+  fetchOwner,
+} from "../../store/actions/Owner/ownerActions";
+import Loading from "../shared/Loading/Loading";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect } from "react";
+import { isObjectNotEmpty } from "../../helpers/checkers";
 
 const validationSchema = Yup.object().shape({
   address: Yup.string().trim(),
   phone: Yup.string()
     .trim()
-    .matches(/^01[0125][0-9]{8}$/, "Invalid phone number"),
-  name: Yup.string().trim().required("name is required."),
+    .matches(/^[0-9]+$/, "Please provide a valid phone number"),
+  name: Yup.string()
+    .trim()
+    .min(2, "length must be at least 2 characters long")
+    .required("name is required."),
   email: Yup.string()
     .trim()
     .email("Invalid email address.")
@@ -18,10 +31,15 @@ const validationSchema = Yup.object().shape({
 });
 const AddNewOwner = () => {
   const { isDark } = useSelector((state) => state.modeReducer);
+  const { isLoading, owner } = useSelector((state) => state.ownerReducer);
+  const getIconColor = () => (isDark ? "#eee" : "#000000");
+  const dispatch = useDispatch();
+  const { ownerId } = useParams();
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
-      owner_image: null,
+      profile_img: null,
       name: "",
       email: "",
       address: "",
@@ -29,16 +47,72 @@ const AddNewOwner = () => {
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
-      // console.log("Form values:", values);
+      if (ownerId) {
+        handleEdit(values);
+      } else {
+        handleAdd(values);
+      }
     },
   });
-  const getIconColor = () => (isDark ? "#eee" : "#000000");
 
+  const handleAdd = (values) => {
+    const formData = new FormData();
+    if (values?.profile_img) {
+      formData.append("profile_img", values?.profile_img);
+    }
+    if (values?.address) {
+      formData.append("address", values?.address);
+    }
+    if (values?.phone) {
+      formData.append("phone", values?.phone);
+    }
+    formData.append("name", values?.name);
+    formData.append("email", values?.email);
+
+    const payload = { formData, toast };
+    dispatch(addOwner(payload))
+      .then(() => {
+        navigate("/owners");
+      });
+  };
+  const handleEdit = (values) => {
+    const formData = new FormData();
+    if (values?.profile_img) {
+      formData.append("profile_img", values?.profile_img);
+    }
+    if (values?.address) {
+      formData.append("address", values?.address);
+    }
+    if (values?.phone) {
+      formData.append("phone", values?.phone);
+    }
+    formData.append("name", values?.name);
+    formData.append("email", values?.email);
+    dispatch(editOwner(formData, toast, ownerId))
+    .then(() => {
+      navigate("/owners");
+    });;
+  };
+
+  useEffect(() => {
+    dispatch(fetchOwner(ownerId));
+  }, [dispatch, ownerId]);
+  useEffect(() => {
+    if (ownerId && isObjectNotEmpty(owner)) {
+      formik.setValues({
+        imageUrl: owner?.profile_img,
+        name: owner?.name,
+        email: owner?.email,
+        address: owner?.address,
+        phone: owner?.phone,
+      });
+    }
+  }, [owner]);
   const handleImageChange = (event) => {
     const file = event.target.files[0]; // Get the first file from the input
     // Check if the selected file is valid
     if (file && file instanceof Blob) {
-      formik.setFieldValue("owner_image", file); // Update Formik field value for 'image'
+      formik.setFieldValue("profile_img", file); // Update Formik field value for 'image'
       // Create object URL for the selected file
       const imageUrl = URL.createObjectURL(file);
       formik.setFieldValue("imageUrl", imageUrl); // Optionally store the URL for preview
@@ -50,33 +124,42 @@ const AddNewOwner = () => {
         isDark ? "bg-gray-900 text-white" : "bg-white text-black"
       }`}
     >
-      <form onSubmit={formik.handleSubmit} className="p-6">
-        <ImageComponent
-          formik={formik}
-          img={userImg}
-          getIconColor={getIconColor}
-          handleImageChange={handleImageChange}
-        />
-
-        <div className="flex justify-center items-center flex-col">
-          <FormField id="name" label="Name" type="text" formik={formik} />
-          <FormField id="email" label="Email" type="email" formik={formik} />
-          <FormField
-            id="phone"
-            label="Phone Number"
-            type="text"
+      {ownerId && isLoading ? (
+        <Loading />
+      ) : (
+        <form onSubmit={formik.handleSubmit} className="p-6">
+          <ImageComponent
             formik={formik}
+            img={userImg}
+            getIconColor={getIconColor}
+            handleImageChange={handleImageChange}
           />
-          <FormField id="address" label="Address" type="text" formik={formik} />
 
-          <button
-            type="submit"
-            className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 mx-auto block"
-          >
-            Add owner
-          </button>
-        </div>
-      </form>
+          <div className="flex justify-center items-center flex-col">
+            <FormField id="name" label="Name" type="text" formik={formik} />
+            <FormField id="email" label="Email" type="email" formik={formik} />
+            <FormField
+              id="phone"
+              label="Phone Number"
+              type="text"
+              formik={formik}
+            />
+            <FormField
+              id="address"
+              label="Address"
+              type="text"
+              formik={formik}
+            />
+
+            <button
+              type="submit"
+              className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 mx-auto block"
+            >
+              {isLoading ? <Loading /> : `${ownerId ? "Edit" : "Add"} owner`}
+            </button>
+          </div>
+        </form>
+      )}
     </div>
   );
 };

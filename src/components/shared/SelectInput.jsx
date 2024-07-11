@@ -65,7 +65,7 @@ const SelectInput = ({
         isSearchable
         styles={customStyles}
         components={customComponents}
-        value={options.find((option) => option.value === formik.values[id])}
+        value={options?.find((option) => option.value === formik.values[id])}
       />
       <ErrorMessage
         touched={formik.touched}

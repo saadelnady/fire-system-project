@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 
 const SideBar = ({ isSidebarOpen, onBurgerClick }) => {
   const { isDark } = useSelector((state) => state.modeReducer);
   const location = useLocation();
+  const sidebarRef = useRef(null);
+
   const [toggleStates, setToggleStates] = useState({
     isOwnersActive: false,
     isProjectsActive: false,
@@ -15,9 +17,27 @@ const SideBar = ({ isSidebarOpen, onBurgerClick }) => {
       [key]: !prevStates[key],
     }));
   };
+  const handleClickOutside = (event) => {
+    if (sidebarRef.current && !sidebarRef.current.contains(event.target)) {
+      onBurgerClick();
+    }
+  };
+
+  useEffect(() => {
+    if (isSidebarOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isSidebarOpen]);
   return (
     <div
-      className={`transform text-white top-0 left-0 w-64 h-screen lg:h-auto fixed overflow-auto z-100 lg:relative lg:transform-none transition-transform duration-300 ease-in-out ${
+      ref={sidebarRef}
+      className={`transform text-white top-0 left-0 w-[270px] h-screen lg:h-auto fixed   z-100 lg:relative lg:transform-none transition-transform duration-300 ease-in-out ${
         isDark ? "bg-gray-900" : "bg-blue-900"
       } ${
         isSidebarOpen ? "translate-x-0" : "-translate-x-full"

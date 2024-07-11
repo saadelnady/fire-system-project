@@ -1,46 +1,56 @@
 import { useFormik } from "formik";
 import userImg from "../../assets/imgs/ic-user.png";
-import { useSelector } from "react-redux";
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
 import PasswordInput from "./PasswordInput";
 import ImageComponent from "../shared/ImageComponent";
 import * as Yup from "yup";
 import FormField from "../shared/FormField";
+import { isObjectNotEmpty } from "../../helpers/checkers";
+import { editUserProfile } from "../../store/actions/user/userActions";
+import { toast } from "react-toastify";
+import Loading from "../shared/Loading/Loading";
 
 const validationSchema = Yup.object().shape({
-  userName: Yup.string()
+  username: Yup.string()
     .trim()
-    .min(8, "Username must be at least 8 characters long.")
+    .min(3, "Username must be at least 3 characters long.")
     .required("Username is required."),
   email: Yup.string()
     .trim()
     .email("Invalid email address.")
     .required("Email is required."),
-  mobilePhone: Yup.string().trim().required("Mobile phone is required."),
-  address: Yup.string().trim(),
+  // phone: Yup.string()
+  //   .trim()
+  //   .matches(/^01[0125][0-9]{8}$/, "Invalid phone number"),
+  // address: Yup.string().trim(),
+  newPassword: Yup.string()
+    .trim()
+    .min(8, "new password must be at least 8 characters long."),
 });
 
 const Profile = () => {
   const { isDark } = useSelector((state) => state.modeReducer);
+  const dispatch = useDispatch();
+  const { isLoading, isLoggedIn, user } = useSelector(
+    (state) => state.userReducer
+  );
   const [isVisible, setIsVisible] = useState({
     currentPassword: true,
     newPassword: true,
-    newPasswordConfirmed: true,
   });
   const formik = useFormik({
     initialValues: {
       user_image: null,
-      userName: "",
+      username: "",
       email: "",
-      mobilePhone: "",
-      address: "",
-      currentPassword: "",
+      // phone: "",
+      // address: "",
       newPassword: "",
-      newPasswordConfirmed: "",
     },
     validationSchema: validationSchema, // Add validation schema here
     onSubmit: (values) => {
-      // console.log("Form values:", values);
+      handleEdit(values);
     },
   });
   const getIconColor = () => (isDark ? "#eee" : "#000000");
@@ -55,14 +65,41 @@ const Profile = () => {
     }
   };
 
+  const handleEdit = (values) => {
+    const formData = new FormData();
+    if (values?.user_image) {
+      formData.append("profile_img", values?.user_image);
+    }
+    if (values?.newPassword) {
+      formData.append("password", values?.newPassword);
+    }
+    formData.append("username", values?.username);
+    formData.append("email", values?.email);
+    // formData.append("phone", values?.phone);
+    // formData.append("address", values?.address);
+    console.log(values);
+    dispatch(editUserProfile(formData, toast));
+  };
+
+  useEffect(() => {
+    if (isObjectNotEmpty(user)) {
+      formik.setValues({
+        imageUrl: user?.profile_img,
+        username: user?.username,
+        email: user?.email,
+        // address: user?.address,
+        // phone: user?.phone,
+      });
+    }
+  }, [user]);
   return (
     <div
-      className={`font-bold  min-h-[100vh] ${
+      className={`font-bold min-h-[100vh]  ${
         isDark ? "text-white" : "text-black"
       }`}
     >
       <div
-        className={`shadow-md mt-4 rounded ${
+        className={`shadow-md mt-4 rounded  p-11 ${
           isDark ? "bg-gray-900 text-white" : "bg-white text-black"
         }`}
       >
@@ -76,38 +113,30 @@ const Profile = () => {
             handleImageChange={handleImageChange}
           />
 
-          <div className="flex flex-wrap items-center justify-evenly">
+          <div className="flex flex-wrap items-center justify-between">
             <FormField
-              id="userName"
+              id="username"
               label="Username"
               type="text"
               formik={formik}
             />
             <FormField id="email" label="Email" type="email" formik={formik} />
-            <FormField
-              id="mobilePhone"
+            {/* ========================= */}
+            {/* <FormField
+              id="phone"
               label="Mobile phone"
               type="text"
               formik={formik}
-            />
-            <FormField
+            /> */}
+            {/* ========================= */}
+
+            {/* <FormField
               id="address"
               label="Address"
               type="text"
               formik={formik}
-            />
-          </div>
-
-          <div className="flex flex-wrap items-center justify-evenly">
-            <PasswordInput
-              formik={formik}
-              isVisible={isVisible}
-              setIsVisible={setIsVisible}
-              fieldName="currentPassword"
-              label="Current Password"
-              placeholder="Enter your current password"
-              isDark={isDark}
-            />
+            /> */}
+            {/* ========================= */}
 
             <PasswordInput
               formik={formik}
@@ -118,21 +147,10 @@ const Profile = () => {
               placeholder="Enter your new password"
               isDark={isDark}
             />
-            <PasswordInput
-              formik={formik}
-              isVisible={isVisible}
-              setIsVisible={setIsVisible}
-              fieldName="newPasswordConfirmed"
-              label="Confirm New Password"
-              placeholder="Confirm your new password"
-              isDark={isDark}
-            />
           </div>
-          <button
-            type="submit"
-            className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 mx-auto block"
-          >
-            Save changes
+
+          <button className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 mx-auto block">
+            {isLoading ? <Loading /> : "Save changes"}
           </button>
         </form>
       </div>

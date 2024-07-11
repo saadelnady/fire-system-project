@@ -1,12 +1,9 @@
 import React from "react";
 import { useSelector } from "react-redux";
 
-const Pagination = ({ itemsPerPage, totalItems, paginate, currentPage }) => {
+const Pagination = ({ totalPages, paginate, currentPage }) => {
   const { isDark } = useSelector((state) => state.modeReducer);
-  // Calculate total number of pages
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
 
-  // Generate an array of page numbers
   const pageNumbers = [];
   for (let i = 1; i <= totalPages; i++) {
     pageNumbers.push(i);
@@ -19,10 +16,8 @@ const Pagination = ({ itemsPerPage, totalItems, paginate, currentPage }) => {
         <button
           onClick={() => paginate(currentPage - 1)}
           disabled={currentPage === 1}
-          className={`-ml-px relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-blue-900 text-sm font-medium text-white hover:bg-gray-50 ${
-            currentPage === totalPages
-              ? "cursor-not-allowed"
-              : "hover:text-gray-700"
+          className={`relative inline-flex items-center px-2 py-2 rounded-l-md border border-gray-300 bg-blue-900 text-sm font-medium text-white ${
+            currentPage === 1 ? "cursor-not-allowed" : "hover:bg-gray-800"
           }`}
         >
           <span className="sr-only">Previous</span>
@@ -42,15 +37,15 @@ const Pagination = ({ itemsPerPage, totalItems, paginate, currentPage }) => {
         </button>
 
         {/* Page Numbers */}
-        <div className="-ml-px relative inline-flex space-x-2 overflow-x-auto">
+        <div className="flex space-x-2 flex-wrap justify-center overflow-x-auto py-2">
           {pageNumbers.map((number) => (
             <button
               key={number}
               onClick={() => paginate(number)}
-              className={`-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium  hover:bg-gray-50 ${
+              className={`inline-flex items-center px-4 py-2 border border-gray-300 text-sm font-medium ${
                 currentPage === number
-                  ? "bg-blue-600 text-black hover:text-white"
-                  : "hover:text-gray-500"
+                  ? "bg-blue-600 text-black"
+                  : "hover:bg-gray-800"
               } ${isDark ? "text-white" : "text-black"}`}
             >
               {number}
@@ -62,10 +57,10 @@ const Pagination = ({ itemsPerPage, totalItems, paginate, currentPage }) => {
         <button
           onClick={() => paginate(currentPage + 1)}
           disabled={currentPage === totalPages}
-          className={`-ml-px relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-blue-900 text-sm font-medium text-white hover:bg-gray-50 ${
+          className={`relative inline-flex items-center px-2 py-2 rounded-r-md border border-gray-300 bg-blue-900 text-sm font-medium text-white ${
             currentPage === totalPages
               ? "cursor-not-allowed"
-              : "hover:text-gray-700"
+              : "hover:bg-gray-800"
           }`}
         >
           <span className="sr-only">Next</span>

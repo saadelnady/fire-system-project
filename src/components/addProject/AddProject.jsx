@@ -1,31 +1,51 @@
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import ImageComponent from "../shared/ImageComponent";
 import userImg from "../../assets/imgs/ic-user.png";
 import { useFormik } from "formik";
 import FormField from "../shared/FormField";
 import SelectInput from "../shared/SelectInput";
 import TextArea from "../shared/TextArea.jsx";
-import { owners, typesData } from "../../assets/data/staticData";
+// import { owners, typesData } from "../../assets/data/staticData";
 import * as Yup from "yup";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Attachments from "../shared/Attacments.jsx";
 import { useParams } from "react-router-dom";
+import { fetchOwners } from "../../store/actions/Owner/ownerActions.js";
+import { fetchTypes } from "../../store/actions/Types/typeActions.js";
+import {
+  addProject,
+  editProject,
+  fetchProject,
+} from "../../store/actions/projects/projectActions.js";
+import { toast } from "react-toastify";
+import moment from "moment";
+import { isObjectNotEmpty } from "../../helpers/checkers.js";
+import formattedDate from "../../helpers/formattedDate.js";
+import Loading from "../shared/Loading/Loading.jsx";
 
 const AddProject = () => {
   const { isDark } = useSelector((state) => state.modeReducer);
+  const { owners } = useSelector((state) => state.ownerReducer);
+  const { types } = useSelector((state) => state.typeReducer);
+  const { project, isLoading } = useSelector((state) => state.projectReducer);
   const params = useParams();
+  const getIconColor = () => (isDark ? "#eee" : "#000000");
+  const dispatch = useDispatch();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [itemsPerPage] = useState(10);
 
-  const ownerOptions = owners.map((owner) => ({
+  const ownerOptions = owners?.list?.map((owner) => ({
     ...owner,
     value: owner?._id,
     label: `${owner?.name} `,
-    image: owner?.image, // Assuming each owner has an image property
+    image: owner?.profile_img,
   }));
 
-  const typesOptions = typesData.map((type) => ({
+  const typesOptions = types?.map((type) => ({
     ...type,
     value: type?._id,
-    label: `${type?.type_name}`,
+    label: `${type?.name}`,
   }));
 
   const formik = useFormik({
@@ -52,41 +72,307 @@ const AddProject = () => {
       stickers: "",
       file_number: "",
       comment: "",
-      attachments: [],
+      attachments: null,
     },
     validationSchema: Yup.object({
-      client_id: Yup.string().required("Owner is required"),
-      project_name: Yup.string().required("name is required"),
+      project_name: Yup.string().min(2).required("required"),
       ref_number_old: Yup.string().matches(
         /^FES-\d+-\d+$/,
         "Invalid ref number format. It should match the pattern FES-###-###."
       ),
-      type_id: Yup.string().required("type is required"),
-      attachments: Yup.array().max(10, "You can upload a maximum of 10 files"),
+      client_id: Yup.string().length(24).required("required"),
+      type_id: Yup.string().length(24).required("required"),
       payment: Yup.number()
-        .required("Payment is required")
+        .required("required")
         .min(Yup.ref("received"), "Payment must be greater than Received"),
       received: Yup.number()
-        .required("Received is required")
+        .required("required")
         .min(0, "Received must be a positive number"),
+      balance_date: Yup.date(),
+      contract_expiry_date: Yup.date().required("required"),
+      register_contract_date: Yup.date(),
+      internal_contract_date: Yup.date().required("required"),
+      istefa_certificate: Yup.string().trim().required("required"),
+      first_visit: Yup.date().required("required"),
+      second_visit: Yup.date().required("required"),
+      third_visit: Yup.date().required("required"),
+      fourth_visit: Yup.date().required("required"),
+      stickers: Yup.date(),
+      file_number: Yup.string().trim(),
+      // attachments: Yup.array()
+      //   .max(10, "You can only upload up to 10 files")
     }),
     onSubmit: (values) => {
-      // console.log("Form values:", values);
+      console.log("values========================>>", JSON.stringify(values));
+      if (params?.projectId) {
+        // handleEdit(values, params?.projectId);
+      } else {
+        handleAdd(values);
+      }
     },
   });
+  // const handleEdit = (values, projectId) => {
+  //   const formData = new FormData();
+  //   if (values.project_img) {
+  //     formData.append("project_img", values.project_img);
+  //   }
+  //   if (values.istefa_certificate_date) {
+  //     formData.append(
+  //       "istefa_certificate_date",
+  //       values.istefa_certificate_date
+  //     );
+  //   }
+  //   if (values.hasantak_certificate_date) {
+  //     formData.append(
+  //       "hasantak_certificate_date",
+  //       values.hasantak_certificate_date
+  //     );
+  //   }
+  //   if (values.comment) {
+  //     formData.append("comment", values.comment);
+  //   }
+  //   if (values.file_number) {
+  //     formData.append("file_number", values.file_number);
+  //   }
 
-  const getIconColor = () => (isDark ? "#eee" : "#000000");
+  //   if (values.attachments && values.attachments.length > 0) {
+  //     formData.append("attachments", values.attachments);
+  //   }
+  //   if (values.balance_date) {
+  //     formData.append("balance_date", values.balance_date);
+  //   }
+
+  //   if (values.ref_number_old) {
+  //     formData.append("ref_number_old", values.ref_number_old);
+  //   }
+  //   if (values.stickers) {
+  //     formData.append("stickers", values.stickers);
+  //   }
+  //   formData.append("project_name", values.project_name);
+  //   formData.append("client_id", values.client_id);
+  //   formData.append("type_id", values.type_id);
+  //   formData.append("payment", values.payment);
+  //   formData.append("received", values.received);
+  //   formData.append("balance", values.balance);
+  //   formData.append("contract_expiry_date", values.contract_expiry_date);
+  //   formData.append("internal_contract_date", values.internal_contract_date);
+  //   formData.append("istefa_certificate", values.istefa_certificate);
+  //   formData.append("first_visit", values.first_visit);
+  //   formData.append("second_visit", values.second_visit);
+  //   formData.append("third_visit", values.third_visit);
+  //   formData.append("fourth_visit", values.fourth_visit);
+  //   formData.append("ref", values.fourth_visit);
+  //   dispatch(editProject);
+  // };
+
+  const handleAdd = (values) => {
+    const formData = new FormData();
+
+    if (values.project_img) {
+      formData.append("project_img", values.project_img);
+    }
+    if (values.istefa_certificate_date) {
+      formData.append(
+        "istefa_certificate_date",
+        values.istefa_certificate_date
+      );
+    }
+    if (values.hasantak_certificate_date) {
+      formData.append(
+        "hasantak_certificate_date",
+        values.hasantak_certificate_date
+      );
+    }
+    if (values.comment) {
+      formData.append("comment", values.comment);
+    }
+    if (values.file_number) {
+      formData.append("file_number", values.file_number);
+    }
+
+    if (values.attachments ) {
+      formData.append("attachments", values.attachments);
+    }
+    if (values.balance_date) {
+      formData.append("balance_date", values.balance_date);
+    }
+
+    if (values.ref_number_old) {
+      formData.append("ref_number_old", values.ref_number_old);
+    }
+    if (values.stickers) {
+      formData.append("stickers", values.stickers);
+    }
+    formData.append("project_name", values.project_name);
+    formData.append("client_id", values.client_id);
+    formData.append("type_id", values.type_id);
+    formData.append("payment", values.payment);
+    formData.append("received", values.received);
+    formData.append("balance", values.balance);
+    formData.append("contract_expiry_date", values.contract_expiry_date);
+    formData.append("internal_contract_date", values.internal_contract_date);
+    formData.append("istefa_certificate", values.istefa_certificate);
+    formData.append("first_visit", values.first_visit);
+    formData.append("second_visit", values.second_visit);
+    formData.append("third_visit", values.third_visit);
+    formData.append("fourth_visit", values.fourth_visit);
+
+    dispatch(addProject({ formData, toast }));
+  };
+
   const handleImageChange = (event) => {
+    console.log("🚀 ~ handleImageChange ~ event:", event)
     const file = event.target.files[0]; // Get the first file from the input
+    console.log("🚀 ~ handleImageChange ~ event.target.files:", event.target.files)
     // Check if the selected file is valid
     if (file && file instanceof Blob) {
-      formik.setFieldValue("image", file); // Update Formik field value for 'image'
+      formik.setFieldValue("project_img", file); // Update Formik field value for 'image'
       // Create object URL for the selected file
       const imageUrl = URL.createObjectURL(file);
       formik.setFieldValue("imageUrl", imageUrl); // Optionally store the URL for preview
     }
   };
+  const handleOwnerChange = (selectedOption) => {
+    // console.log("selectedOption ===>", selectedOption);
+    formik.setFieldValue("client_id", selectedOption?.value);
+  };
 
+  const handleTypeChange = (selectedOption) => {
+    formik.setFieldValue("type_id", selectedOption?.value);
+  };
+  const handleAttachmentsChange = (event) => {
+    console.log("🚀 ~ handleAttachmentsChange ~ event:", event)
+    formik.setFieldValue("attachments", event.target.files[0]);
+    console.log("🚀 ~ handleAttachmentsChange ~ event.target.files:", event.target.files)
+  };
+
+  // to get project data
+  useEffect(() => {
+    if (params?.projectId) {
+      dispatch(fetchProject(params?.projectId));
+    }
+  }, []);
+
+  // to bind project data
+  // =================================
+  // useEffect(() => {
+  //   if (isObjectNotEmpty(project)) {
+  //     if (project?.project_img) {
+  //       formik.setFieldValue("imageUrl", project?.project_img);
+  //     }
+
+  //     if (project?.istefa_certificate_date) {
+  //       formik.setFieldValue(
+  //         "istefa_certificate_date",
+  //         formattedDate(project?.istefa_certificate_date)
+  //       );
+  //     }
+  //     if (project?.hasantak_certificate_date) {
+  //       formik.setFieldValue(
+  //         "hasantak_certificate_date",
+  //         formattedDate(project?.hasantak_certificate_date)
+  //       );
+  //     }
+  //     if (project?.comment) {
+  //       formik.setFieldValue("comment", project?.comment);
+  //     }
+  //     if (project?.file_number) {
+  //       formik.setFieldValue("file_number", project?.file_number);
+  //     }
+
+  //     if (project?.attachments && project?.attachments.length > 0) {
+  //       formik.setFieldValue("attachments", project?.attachments);
+  //     }
+  //     if (project?.balance_date) {
+  //       formik.setFieldValue(
+  //         "balance_date",
+  //         formattedDate(project?.balance_date)
+  //       );
+  //     }
+
+  //     if (project?.ref_number_old) {
+  //       formik.setFieldValue("ref_number_old", project?.ref_number_old);
+  //     }
+  //     if (project?.stickers) {
+  //       formik.setFieldValue("stickers", project?.stickers);
+  //     }
+
+  //     formik.setFieldValue("project_name", project?.project_name);
+  //     formik.setFieldValue("client_id", project?.client_id);
+  //     formik.setFieldValue("type_id", project?.type_id);
+  //     formik.setFieldValue("payment", project?.payment);
+  //     formik.setFieldValue("received", project?.received);
+  //     formik.setFieldValue("balance", project?.balance);
+  //     formik.setFieldValue(
+  //       "contract_expiry_date",
+  //       formattedDate(project?.contract_expiry_date)
+  //     );
+  //     formik.setFieldValue(
+  //       "internal_contract_date",
+  //       formattedDate(project?.internal_contract_date)
+  //     );
+
+  //     console.log(
+  //       "project?.internal_contract_date ==>",
+  //       project?.internal_contract_date
+  //     );
+  //     formik.setFieldValue("istefa_certificate", project?.istefa_certificate);
+  //     formik.setFieldValue("first_visit", project?.first_visit);
+  //     formik.setFieldValue("second_visit", project?.second_visit);
+  //     formik.setFieldValue("third_visit", project?.third_visit);
+  //     formik.setFieldValue("fourth_visit", project?.fourth_visit);
+  //   }
+  // }, [project]);
+
+  // ===============================================================================
+
+  // to get owners
+  useEffect(() => {
+    dispatch(
+      fetchOwners({
+        page: currentPage,
+        limit: itemsPerPage,
+        search: searchTerm,
+      })
+    );
+  }, [dispatch, currentPage, itemsPerPage, searchTerm]);
+  // to get types
+  useEffect(() => {
+    dispatch(
+      fetchTypes({
+        page: currentPage,
+        limit: itemsPerPage,
+        search: searchTerm,
+      })
+    );
+  }, [dispatch, currentPage, itemsPerPage, searchTerm]);
+
+  //  to calc expire date and internal date and four visits
+  useEffect(() => {
+    if (!isObjectNotEmpty(project) || params?.ownerId) {
+      const currentDate = moment().format("YYYY-MM-DD");
+      const newExpiryDate = moment().add(1, "year").format("YYYY-MM-DD");
+      const newInternalContractDate = moment()
+        .add(1, "year")
+        .format("YYYY-MM-DD");
+
+      formik.setFieldValue("register_contract_date", currentDate);
+      formik.setFieldValue("contract_expiry_date", newExpiryDate);
+      formik.setFieldValue("internal_contract_date", newInternalContractDate);
+
+      const firstVisitDate = moment().add(3, "months").format("YYYY-MM-DD");
+      const secondVisitDate = moment().add(6, "months").format("YYYY-MM-DD");
+      const thirdVisitDate = moment().add(9, "months").format("YYYY-MM-DD");
+      const fourthVisitDate = moment().add(12, "months").format("YYYY-MM-DD");
+
+      formik.setFieldValue("first_visit", firstVisitDate);
+      formik.setFieldValue("second_visit", secondVisitDate);
+      formik.setFieldValue("third_visit", thirdVisitDate);
+      formik.setFieldValue("fourth_visit", fourthVisitDate);
+    }
+  }, []);
+
+  // to calc payments
   useEffect(() => {
     const calculateBalance = () => {
       const { payment, received } = formik.values;
@@ -97,34 +383,16 @@ const AddProject = () => {
   }, [formik.values.payment, formik.values.received]);
 
   useEffect(() => {
-    console.log(ownerOptions);
-    console.log(params.ownerId);
-    const selectedOwner = ownerOptions.find(
-      (option) => option.value == params.ownerId
-    );
-    formik.setFieldValue("client_id", selectedOwner);
-    console.log(selectedOwner);
-  }, [params]);
-  const handleAttachmentsChange = (event) => {
-    const files = Array.from(event.target.files); // Convert FileList to array
-
-    formik.setFieldValue("attachments", files);
-  };
-
-  const handleOwnerChange = (selectedOption) => {
-    console.log("selectedOption ===>", selectedOption);
-    formik.setFieldValue("client_id", selectedOption?.value);
-  };
-
-  const handleTypeChange = (selectedOption) => {
-    formik.setFieldValue("type_id", selectedOption?.value);
-  };
+    if (params?.ownerId) {
+      formik.setFieldValue("client_id", params.ownerId);
+    }
+  }, [params.ownerId]);
 
   const customComponents = {
     Option: ({ innerRef, innerProps, data }) => (
       <div ref={innerRef} {...innerProps} className={`flex items-center`}>
         <img
-          src={data?.owner_image}
+          src={data?.profile_img}
           alt={data?.label}
           style={{
             width: 50,
@@ -184,6 +452,7 @@ const AddProject = () => {
             label="Register contract date"
             type="date"
             formik={formik}
+            isDisabled={"disapled"}
           />
           <FormField
             id="internal_contract_date"
@@ -297,7 +566,7 @@ const AddProject = () => {
           type="submit"
           className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 mx-auto block mt-5"
         >
-          Add owner
+          {isLoading ? <Loading /> : "Add project "}
         </button>
       </form>
     </div>

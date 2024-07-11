@@ -5,38 +5,44 @@ const Table = ({ cols, rows, width }) => {
   const { isDark } = useSelector((state) => state.modeReducer);
   return (
     <div
-      className={`overflow-x-scroll sm:overflow-x-auto ${
+      className={`overflow-x-auto overflow-y-clip mx-auto ${
         width ? width : "w-full"
       } `}
     >
       {rows && rows?.length > 0 ? (
         <table
-          className={`min-w-full divide-y divide-gray-200 mt-4 rounded mb-[65px] ${
-            isDark ? "bg-gray-900" : "bg-gray-50 "
+          className={`min-w-full divide-y divide-gray-200 mt-4 rounded text-start mb-16 ${
+            isDark ? "bg-gray-900 text-white" : "bg-white text-gray-900"
           }`}
         >
-          <thead>
+          <thead className={`${isDark ? "bg-gray-900" : "bg-white"}`}>
             <tr>
               {cols.map((col, index) => (
                 <th
                   key={index}
                   scope="col"
-                  className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  className="p-3 text-left text-xs font-medium uppercase tracking-wider"
                 >
                   {col.header}
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody>
-            {rows?.map((row, rowIndex) => (
-              <tr key={rowIndex}>
+          <tbody className={`${isDark ? "bg-gray-900" : "bg-white"}`}>
+            {rows.map((row, rowIndex) => (
+              <tr
+                key={rowIndex}
+                className={`${
+                  rowIndex % 2 === 0
+                    ? isDark
+                      ? "bg-gray-800"
+                      : "bg-gray-50"
+                    : ""
+                }`}
+              >
                 {cols.map((col, colIndex) => (
-                  <td
-                    key={colIndex}
-                    className="px-6 py-4 whitespace-nowrap text-start"
-                  >
-                    {col.render ? col.render(row) : row[col.accessor]}
+                  <td key={colIndex} className="p-3 text-sm whitespace-nowrap">
+                    {col.render ? col.render(row, rowIndex) : row[col.accessor]}
                   </td>
                 ))}
               </tr>

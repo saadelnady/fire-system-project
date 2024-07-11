@@ -1,4 +1,4 @@
-import { TOGGLE_DARK_MODE } from "../../actions/actionsTypes";
+import { TOGGLE_DARK_MODE } from "../../actions/actionTypes";
 
 const initialState = {
   isDark: localStorage.getItem("isDark")

@@ -1,14 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import { fetchDropdownNotifications } from "../../store/actions/notificatios/notificationActions";
 
-const Notifications = () => {
+const NotificationsDropDown = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { isDark } = useSelector((state) => state.modeReducer);
+  const { notificationsDropdown, isLoading, total } = useSelector(
+    (state) => state.notificationReducer
+  );
+  console.log(notificationsDropdown?.list);
   const dropdownRef = useRef(null);
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
   };
+  const dispatch = useDispatch();
 
   // Close dropdown when clicking outside of it
   useEffect(() => {
@@ -22,6 +28,15 @@ const Notifications = () => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
+  }, []);
+
+  useEffect(() => {
+    dispatch(
+      fetchDropdownNotifications({
+        page: 1,
+        limit: 5,
+      })
+    );
   }, []);
 
   return (
@@ -50,43 +65,44 @@ const Notifications = () => {
             </g>
           </g>
         </svg>
-        <span className="absolute top-0 right-0 inline-flex items-center justify-center p-1 h-4 w-4 text-xs font-bold leading-none text-white bg-red-600 rounded-full">
-          {/* Example notification count or indicator */}3
+        <span className="absolute top-0 right-0 inline-flex items-center justify-center p-3 h-4 w-4 text-sm font-bold leading-none text-white bg-red-600 rounded-full">
+          {total}
         </span>
       </button>
       {isDropdownOpen && (
         <div
           ref={dropdownRef}
-          className={`absolute right-0 mt-2 w-64 rounded-lg shadow-lg ${
-            isDark ? "bg-gray-800 text-white" : "bg-white text-black"
-          }`}
+          className={`absolute right-[-60px] md:right-0 mt-2 border border-gray-900 rounded-lg shadow-md 
+            w-[90vw] md:w-[500px] 
+            ${isDark ? "bg-gray-800 text-white" : "bg-white text-black"}`}
         >
-          <div className="p-4">
+          <div className="p-4 ">
             <h4 className="font-bold mb-2 border-b-2 pb-2">Notifications</h4>
-            <ul className="border-b-2 ">
-              <li
-                className={`p-2 hover:text-black ${
-                  isDark ? "hover:bg-gray-900" : "hover:bg-gray-100"
-                } `}
-              >
-                Notification 1
-              </li>
-              <li
-                className={`p-2 hover:text-black ${
-                  isDark ? "hover:bg-gray-900" : "hover:bg-gray-100"
-                } `}
-              >
-                Notification 2
-              </li>
-              <li
-                className={`p-2 hover:text-black ${
-                  isDark ? "hover:bg-gray-900" : "hover:bg-gray-100"
-                } `}
-              >
-                Notification 3
-              </li>
+            <ul className=" h-[300px] overflow-y-auto  ">
+              {notificationsDropdown?.list?.map((notification, index) => (
+                <li
+                  className={`py-3 hover:text-black border-b-2 flex items-center ${
+                    isDark ? "hover:bg-gray-900" : "hover:bg-gray-100"
+                  } `}
+                >
+                  <img
+                    src={notification?.project_id?.project_img}
+                    alt="project_img"
+                    className="rounded-full w-[50px] h-[50px] object-cover border me-3"
+                  />
+                  <div>
+                    <p className="font-bold">
+                      {notification?.project_id?.project_name}
+                    </p>
+                    <p>{notification?.message}</p>
+                  </div>
+                </li>
+              ))}
             </ul>
-            <Link to={"/notifications"} className="text-blue-500 mt-3 block ">
+            <Link
+              to={"/notifications"}
+              className="bg-blue-500 text-white mt-3 block text-center  w-fit mx-auto py-3 px-2 rounded"
+            >
               View All Notifications
             </Link>
           </div>
@@ -96,4 +112,4 @@ const Notifications = () => {
   );
 };
 
-export default Notifications;
+export default NotificationsDropDown;

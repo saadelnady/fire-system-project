@@ -18,7 +18,10 @@ const FormField = ({
         width ? width : " md:w-[40%]"
       } h-[110px]`}
     >
-      <label htmlFor={id} className="font-bold">
+      <label
+        htmlFor={id}
+        className={`font-bold ${isDark ? "text-white" : "text-black"}`}
+      >
         {label}
       </label>
       <input

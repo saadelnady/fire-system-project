@@ -1,6 +1,6 @@
 import React from "react";
 import DarkModeToggle from "./DarkModeToggle";
-import Notifications from "./Notifications";
+import NotificationsDropDown from "./NotificationsDropDown";
 import User from "./User";
 import { useSelector } from "react-redux";
 
@@ -31,7 +31,7 @@ const Header = ({ onBurgerClick }) => {
       </button>
       <div className="flex items-center space-x-4">
         <DarkModeToggle />
-        <Notifications />
+        <NotificationsDropDown />
         <User />
       </div>
     </div>
