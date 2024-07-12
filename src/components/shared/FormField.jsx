@@ -10,13 +10,15 @@ const FormField = ({
   isDisabled,
   width,
   handleChange,
+  placeholder,
+  height,
 }) => {
   const { isDark } = useSelector((state) => state.modeReducer);
   return (
     <div
-      className={`flex flex-col w-full ${
-        width ? width : " md:w-[40%]"
-      } h-[110px]`}
+      className={`flex flex-col w-full ${width ? width : " md:w-[40%]"} ${
+        height ? height : "h-[110px]"
+      } `}
     >
       <label
         htmlFor={id}
@@ -28,6 +30,7 @@ const FormField = ({
         id={id}
         name={id}
         type={type}
+        placeholder={placeholder}
         onChange={handleChange || formik.handleChange}
         onBlur={formik.handleBlur}
         value={formik.values[id]}

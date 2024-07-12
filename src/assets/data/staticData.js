@@ -225,3 +225,30 @@ export const notifications = [
     status: "read",
   },
 ];
+export const payments = [
+  {
+    _id: "1",
+    payment: "You have a new friend request.",
+    date: "unread",
+  },
+  {
+    _id: "2",
+    payment: "You have a new friend request.",
+    date: "unread",
+  },
+  {
+    _id: "3",
+    payment: "You have a new friend request.",
+    date: "unread",
+  },
+  {
+    _id: "4",
+    payment: "You have a new friend request.",
+    date: "unread",
+  },
+  {
+    _id: "5",
+    payment: "You have a new friend request.",
+    date: "unread",
+  },
+];

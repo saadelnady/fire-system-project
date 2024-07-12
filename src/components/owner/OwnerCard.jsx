@@ -35,7 +35,7 @@ const OwnerCard = () => {
         Mobile Phone: <span>{owner?.phone || "___"}</span>
       </p>
       <Link
-        to={`/addProjectbyOwner/${owner?._id}`}
+        to={`/addprojectbyOwner/${owner?._id}`}
         className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 mx-auto block w-fit"
       >
         Add new project

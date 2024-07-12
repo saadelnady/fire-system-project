@@ -4,18 +4,14 @@ import { useSelector } from "react-redux";
 const Table = ({ cols, rows, width }) => {
   const { isDark } = useSelector((state) => state.modeReducer);
   return (
-    <div
-      className={`overflow-x-auto overflow-y-clip mx-auto ${
-        width ? width : "w-full"
-      } `}
-    >
-      {rows && rows?.length > 0 ? (
+    <div className={`overflow-x-auto overflow-y-clip mx-auto w-full`}>
+      {rows && rows.length > 0 ? (
         <table
           className={`min-w-full divide-y divide-gray-200 mt-4 rounded text-start mb-16 ${
             isDark ? "bg-gray-900 text-white" : "bg-white text-gray-900"
           }`}
         >
-          <thead className={`${isDark ? "bg-gray-900" : "bg-white"}`}>
+          <thead className={`${isDark ? "bg-gray-900" : "bg-gray-100"}`}>
             <tr>
               {cols.map((col, index) => (
                 <th
@@ -23,7 +19,10 @@ const Table = ({ cols, rows, width }) => {
                   scope="col"
                   className="p-3 text-left text-xs font-medium uppercase tracking-wider"
                 >
-                  {col.header}
+                  <div className="flex items-center">
+                    {col.headerButton && col.headerButton()}
+                    {col.header}
+                  </div>
                 </th>
               ))}
             </tr>
@@ -43,7 +42,7 @@ const Table = ({ cols, rows, width }) => {
                 {cols.map((col, colIndex) => (
                   <td
                     key={colIndex}
-                    className="p-4 w-[500px]  text-sm whitespace-nowrap"
+                    className="p-4 w-[500px] text-sm whitespace-nowrap"
                   >
                     {col.render ? col.render(row, rowIndex) : row[col.accessor]}
                   </td>

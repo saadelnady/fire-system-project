@@ -276,9 +276,9 @@ const SideBar = ({ isSidebarOpen, onBurgerClick }) => {
             </li>
             <li className=" ms-3 mt-2">
               <Link
-                to="/addProject"
+                to="/addproject"
                 className={`font-bold text-l flex items-center px-3 py-2 rounded ${
-                  location.pathname === "/addProject"
+                  location.pathname === "/addproject"
                     ? "bg-blue-300 text-white"
                     : ""
                 }`}
