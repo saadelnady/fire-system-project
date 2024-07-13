@@ -12,6 +12,7 @@ const FormField = ({
   handleChange,
   placeholder,
   height,
+  min
 }) => {
   const { isDark } = useSelector((state) => state.modeReducer);
   return (
@@ -31,6 +32,7 @@ const FormField = ({
         name={id}
         type={type}
         placeholder={placeholder}
+        min={min}
         onChange={handleChange || formik.handleChange}
         onBlur={formik.handleBlur}
         value={formik.values[id]}
