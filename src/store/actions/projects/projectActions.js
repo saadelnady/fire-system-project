@@ -61,11 +61,11 @@ export const addProject = ({ formData, toast }) => {
   };
 };
 /* ================================================================================================== */
-export const editProject = (payload, toast, ownerId) => {
+export const editProject = (payload, toast, projectId) => {
   return async (dispatch) => {
     dispatch(actionsCreators.editProject(payload));
     try {
-      const response = await putData(`/v1/clients/${ownerId}`, payload);
+      const response = await putData(`/v1/projects/${projectId}`, payload);
       if (response?.status) {
         dispatch(actionsCreators.editProjectSuccess(response?.data));
         showToast(toast, response?.message, "success");

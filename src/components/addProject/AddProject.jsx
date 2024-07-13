@@ -76,6 +76,7 @@ const AddProject = () => {
       file_number: "",
       comment: "",
       attachments: null,
+      ref_number:''
     },
     validationSchema: Yup.object({
       project_name: Yup.string().min(2).required("required"),
@@ -85,8 +86,8 @@ const AddProject = () => {
       ),
       client_id: Yup.string().length(24).required("required"),
       type_id: Yup.string().length(24).required("required"),
-      payment: Yup.number().required("Payment is required"),
-
+      payment: Yup.number().min(0).required("Payment is required"),
+      received: Yup.number().min(0).required("Received is required"),
       balances: Yup.array(),
       contract_expiry_date: Yup.date().required("required"),
       register_contract_date: Yup.date(),
@@ -101,67 +102,63 @@ const AddProject = () => {
       // attachments: Yup.array().max(10, "You can only upload up to 10 files"),
     }),
     onSubmit: (values) => {
-      console.log("values========================>>", JSON.stringify(values));
       if (params?.projectId) {
-        // handleEdit(values, params?.projectId);
+        handleEdit(values, params?.projectId);
       } else {
         handleAdd(values);
       }
     },
   });
-  // const handleEdit = (values, projectId) => {
-  //   const formData = new FormData();
-  //   if (values.project_img) {
-  //     formData.append("project_img", values.project_img);
-  //   }
-  //   if (values.istefa_certificate_date) {
-  //     formData.append(
-  //       "istefa_certificate_date",
-  //       values.istefa_certificate_date
-  //     );
-  //   }
-  //   if (values.hasantak_certificate_date) {
-  //     formData.append(
-  //       "hasantak_certificate_date",
-  //       values.hasantak_certificate_date
-  //     );
-  //   }
-  //   if (values.comment) {
-  //     formData.append("comment", values.comment);
-  //   }
-  //   if (values.file_number) {
-  //     formData.append("file_number", values.file_number);
-  //   }
+  const handleEdit = (values, projectId) => {
+    const formData = new FormData();
+    if (values.project_img) {
+      formData.append("project_img", values.project_img);
+    }
+    if (values.istefa_certificate_date) {
+      formData.append(
+        "istefa_certificate_date",
+        values.istefa_certificate_date
+      );
+    }
+    if (values.hasantak_certificate_date) {
+      formData.append(
+        "hasantak_certificate_date",
+        values.hasantak_certificate_date
+      );
+    }
+    if (values.comment) {
+      formData.append("comment", values.comment);
+    }
+    if (values.file_number) {
+      formData.append("file_number", values.file_number);
+    }
 
-  //   if (values.attachments && values.attachments.length > 0) {
-  //     formData.append("attachments", values.attachments);
-  //   }
-  //   if (values.balance_date) {
-  //     formData.append("balance_date", values.balance_date);
-  //   }
+    if (values.attachments) {
+      values.attachments.forEach((attachment) =>
+        formData.append("attachments", attachment)
+      );
+    }
 
-  //   if (values.ref_number_old) {
-  //     formData.append("ref_number_old", values.ref_number_old);
-  //   }
-  //   if (values.stickers) {
-  //     formData.append("stickers", values.stickers);
-  //   }
-  //   formData.append("project_name", values.project_name);
-  //   formData.append("client_id", values.client_id);
-  //   formData.append("type_id", values.type_id);
-  //   formData.append("payment", values.payment);
-  //   formData.append("received", values.received);
-  //   formData.append("balance", values.balance);
-  //   formData.append("contract_expiry_date", values.contract_expiry_date);
-  //   formData.append("internal_contract_date", values.internal_contract_date);
-  //   formData.append("istefa_certificate", values.istefa_certificate);
-  //   formData.append("first_visit", values.first_visit);
-  //   formData.append("second_visit", values.second_visit);
-  //   formData.append("third_visit", values.third_visit);
-  //   formData.append("fourth_visit", values.fourth_visit);
-  //   formData.append("ref", values.fourth_visit);
-  //   dispatch(editProject);
-  // };
+    if (values.ref_number_old) {
+      formData.append("ref_number_old", values.ref_number_old);
+    }
+    if (values.stickers) {
+      formData.append("stickers", values.stickers);
+    }  
+    formData.append("project_name", values.project_name);
+    formData.append("client_id", values.client_id);
+    formData.append("type_id", values.type_id);
+    formData.append("contract_expiry_date", values.contract_expiry_date);
+    formData.append("internal_contract_date", values.internal_contract_date);
+    formData.append("istefa_certificate", values.istefa_certificate);
+    formData.append("first_visit", values.first_visit);
+    formData.append("second_visit", values.second_visit);
+    formData.append("third_visit", values.third_visit);
+    formData.append("fourth_visit", values.fourth_visit);
+    formData.append("ref_number", values.ref_number);
+
+    dispatch(editProject(formData,toast,params.projectId));
+  };
 
   const handleAdd = (values) => {
     const formData = new FormData();
@@ -201,9 +198,15 @@ const AddProject = () => {
       formData.append("stickers", values.stickers);
     }
     formData.append("payment", values.payment);
-    formData.append("received", 0);
-    formData.append("balances", values.balances);
-
+    formData.append("received",values.received);
+    if (values.balances.length > 0) {
+      if (values.balances.length === 1 && values.balances[0].balance_amount > 0) {
+          formData.append("balances",JSON.stringify( values.balances));
+      } else if (values.balances.length > 1) {
+          formData.append("balances", JSON.stringify(values.balances));
+      }
+  }
+  
     formData.append("project_name", values.project_name);
     formData.append("client_id", values.client_id);
     formData.append("type_id", values.type_id);
@@ -215,7 +218,7 @@ const AddProject = () => {
     formData.append("third_visit", values.third_visit);
     formData.append("fourth_visit", values.fourth_visit);
     console.log("values===", values);
-    // dispatch(addProject({ formData, toast }));
+    dispatch(addProject({ formData, toast }));
   };
 
   const handleImageChange = (event) => {
@@ -246,78 +249,77 @@ const AddProject = () => {
     }
   }, []);
 
-  // to bind project data
-  // =================================
-  // useEffect(() => {
-  //   if (isObjectNotEmpty(project) && params?.projectId) {
-  //     if (project?.project_img) {
-  //       formik.setFieldValue("imageUrl", project?.project_img);
-  //     }
 
-  //     if (project?.istefa_certificate_date) {
-  //       formik.setFieldValue(
-  //         "istefa_certificate_date",
-  //         formattedDate(project?.istefa_certificate_date)
-  //       );
-  //     }
-  //     if (project?.hasantak_certificate_date) {
-  //       formik.setFieldValue(
-  //         "hasantak_certificate_date",
-  //         formattedDate(project?.hasantak_certificate_date)
-  //       );
-  //     }
-  //     if (project?.comment) {
-  //       formik.setFieldValue("comment", project?.comment);
-  //     }
-  //     if (project?.file_number) {
-  //       formik.setFieldValue("file_number", project?.file_number);
-  //     }
+  useEffect(() => {
+    if (isObjectNotEmpty(project) && params?.projectId) {
+      if (project?.project_img) {
+        formik.setFieldValue("imageUrl", project?.project_img);
+      }
 
-  //     if (project?.attachments && project?.attachments.length > 0) {
-  //       formik.setFieldValue("attachments", project?.attachments);
-  //     }
-  //     if (project?.balance_date) {
-  //       formik.setFieldValue(
-  //         "balance_date",
-  //         formattedDate(project?.balance_date)
-  //       );
-  //     }
+      if (project?.istefa_certificate_date) {
+        formik.setFieldValue(
+          "istefa_certificate_date",
+          moment( project?.istefa_certificate_date).format('YYYY-MM-DD')
+        );
+      }
+      if (project?.hasantak_certificate_date) {
+        formik.setFieldValue(
+          "hasantak_certificate_date",
+          moment(project?.hasantak_certificate_date).format('YYYY-MM-DD')
+        );
+      }
+      if (project?.comment) {
+        formik.setFieldValue("comment", project?.comment);
+      }
+      if (project?.file_number) {
+        formik.setFieldValue("file_number", project?.file_number);
+      }
 
-  //     if (project?.ref_number_old) {
-  //       formik.setFieldValue("ref_number_old", project?.ref_number_old);
-  //     }
-  //     if (project?.stickers) {
-  //       formik.setFieldValue("stickers", project?.stickers);
-  //     }
+      if (project?.attachments && project?.attachments.length > 0) {
+        formik.setFieldValue("attachments", project?.attachments);
+      }
 
-  //     formik.setFieldValue("project_name", project?.project_name);
-  //     formik.setFieldValue("client_id", project?.client_id);
-  //     formik.setFieldValue("type_id", project?.type_id);
-  //     formik.setFieldValue("payment", project?.payment);
-  //     formik.setFieldValue("balances", project?.balances);
-  //     formik.setFieldValue("received", project?.received);
-  //     formik.setFieldValue(
-  //       "contract_expiry_date",
-  //       formattedDate(project?.contract_expiry_date)
-  //     );
-  //     formik.setFieldValue(
-  //       "internal_contract_date",
-  //       formattedDate(project?.internal_contract_date)
-  //     );
+      if (project?.ref_number_old) {
+        formik.setFieldValue("ref_number_old", project?.ref_number_old);
+      }
+      if (project?.ref_number) {
+        formik.setFieldValue("ref_number", project?.ref_number);
+      }
+      if (project?.stickers) {
+        formik.setFieldValue("stickers", project?.stickers);
+      }
 
-  //     console.log(
-  //       "project?.internal_contract_date ==>",
-  //       project?.internal_contract_date
-  //     );
-  //     formik.setFieldValue("istefa_certificate", project?.istefa_certificate);
-  //     formik.setFieldValue("first_visit", project?.first_visit);
-  //     formik.setFieldValue("second_visit", project?.second_visit);
-  //     formik.setFieldValue("third_visit", project?.third_visit);
-  //     formik.setFieldValue("fourth_visit", project?.fourth_visit);
-  //   }
-  // }, [project]);
+      formik.setFieldValue("project_name", project?.project_name);
+      formik.setFieldValue("client_id", project?.client_id);
+      formik.setFieldValue("type_id", project?.type_id);
 
-  // ===============================================================================
+      formik.setFieldValue(
+        "contract_expiry_date",
+        moment(project?.contract_expiry_date).format('YYYY-MM-DD')
+      );
+      formik.setFieldValue(
+        "internal_contract_date",
+        moment(project?.internal_contract_date).format('YYYY-MM-DD')
+      );
+
+      if (project?.istefa_certificate_date) {
+        formik.setFieldValue("istefa_certificate_date",moment(project?.istefa_certificate_date).format('YYYY-MM-DD'));
+      }
+      if (project?.hasantak_certificate_date) {
+        formik.setFieldValue("hasantak_certificate_date",moment(project?.hasantak_certificate_date).format('YYYY-MM-DD'));
+      }
+      if (project?.stickers) {
+        formik.setFieldValue("stickers",moment(project?.stickers).format('YYYY-MM-DD'));
+      }
+   
+      formik.setFieldValue("istefa_certificate", project?.istefa_certificate);
+      formik.setFieldValue("first_visit", moment(project?.first_visit).format('YYYY-MM-DD'));
+      formik.setFieldValue("second_visit",moment( project?.second_visit).format('YYYY-MM-DD'));
+      formik.setFieldValue("third_visit", moment(project?.third_visit).format('YYYY-MM-DD'));
+      formik.setFieldValue("fourth_visit",moment( project?.fourth_visit).format('YYYY-MM-DD'));
+    }
+  }, [project]);
+
 
   // to get owners
   useEffect(() => {
@@ -328,9 +330,6 @@ const AddProject = () => {
         search: searchTerm,
       })
     );
-  }, [dispatch, currentPage, itemsPerPage, searchTerm]);
-  // to get types
-  useEffect(() => {
     dispatch(
       fetchTypes({
         page: currentPage,
@@ -338,7 +337,26 @@ const AddProject = () => {
         search: searchTerm,
       })
     );
-  }, [dispatch, currentPage, itemsPerPage, searchTerm]);
+
+  }, []);
+  // to get types
+
+
+  useEffect(() => {
+    let total_balances = 0;
+  
+    if (formik.values.balances && Array.isArray(formik.values.balances)) {
+      total_balances = formik.values.balances.reduce((total, balance) => {
+        return total + parseFloat(balance.balance_amount || 0);
+      }, 0);
+    }
+  
+  
+    const received = parseFloat(formik.values.payment || 0) - total_balances;
+  
+    formik.setFieldValue("received", received);
+  }, [formik.values.balances, formik.values.payment]);
+  
 
   //  to calc expire date and internal date and four visits
   useEffect(() => {
@@ -363,24 +381,24 @@ const AddProject = () => {
       formik.setFieldValue("third_visit", thirdVisitDate);
       formik.setFieldValue("fourth_visit", fourthVisitDate);
     }
-  }, []);
+  }, [formik.values]);
 
-  // to calc payments
-  // ================================================
-  useEffect(() => {
-    const calculateBalance = () => {
-      const { payment, balances } = formik.values;
-      let total_balances = 0;
-      if (balances) {
-        total_balances = balances.reduce(
-          (total, balance) => total + +balance.balance_amount,
-          0
-        );
-      }
-    };
+  // // to calc payments
+  // // ================================================
+  // useEffect(() => {
+  //   const calculateBalance = () => {
+  //     const { payment, balances } = formik.values;
+  //     let total_balances = 0;
+  //     if (balances) {
+  //       total_balances = balances.reduce(
+  //         (total, balance) => total + +balance.balance_amount,
+  //         0
+  //       );
+  //     }
+  //   };
 
-    calculateBalance();
-  }, [formik.values.balances]);
+  //   calculateBalance();
+  // }, [formik.values.balances]);
 
   // ================================================
 
@@ -411,7 +429,7 @@ const AddProject = () => {
   const addNewRow = () => {
     formik.setFieldValue("balances", [
       ...formik.values.balances,
-      { balance_amount: "", balance_date: "" },
+      { balance_amount: 0, balance_date: "" },
     ]);
   };
   const deleteRow = (rowIndex) => {
@@ -423,6 +441,28 @@ const AddProject = () => {
 
     formik.setFieldValue("balances", updatedReceived);
   };
+
+  const handlePaymentChange = (event) => {
+    formik.setFieldValue("payment", event.target.value);
+
+    let total_balances = 0; 
+    if (formik.values.balances && Array.isArray(formik.values.balances)) {
+      total_balances = formik.values.balances.reduce((total, balance) => {
+        return total + parseFloat(balance.balance_amount || 0);
+      }, 0);
+    }
+  
+    const received = parseFloat(event.target.value || 0) - total_balances;  
+    formik.setFieldValue("received", received);
+  };
+
+
+
+  const handleBalanseChange =  (event, property) => {
+     formik.setFieldValue(property, event.target.value);
+  };
+  
+  
 
   const columns = [
     {
@@ -453,6 +493,8 @@ const AddProject = () => {
           formik={formik}
           placeholder={`balance-${rowIndex + 1}`}
           height={"h-fit"}
+          min={0}
+          handleChange={(event)=> handleBalanseChange(event,`balances[${rowIndex}].balance_amount` )}
         />
       ),
     },
@@ -597,30 +639,46 @@ const AddProject = () => {
             handleChange={handleAttachmentsChange}
             formik={formik}
           />
+        
+        
         </div>
-        <h2 className="text-center font-bold text-xl "> Payments </h2>
-        <div className="flex flex-wrap justify-between items-center ">
+        <>
+  { !params.projectId ? (
+      <>
+        <h2 className="text-center font-bold text-xl"> Payments </h2>
+        <div className="flex flex-wrap justify-between items-center">
           <FormField
             id="payment"
             label="Payment"
             type="number"
             formik={formik}
+            handleChange={handlePaymentChange}
           />
           <FormField
             id="received"
             label="received"
             type="number"
+            isDisabled={true}
             formik={formik}
           />
         </div>
 
         <Table cols={columns} rows={formik.values.balances} />
+      </>
+    ) : (
+      <div className="mb-6 bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative text-center" role="alert">
+      To edit payments for this project, please go to the payment tab.
+    </div>    )
+  }
+</>
+
+        
         <TextArea id="comment" label="Comment" formik={formik} />
         <button
           type="submit"
           className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 mx-auto block mt-5"
         >
-          {isLoading ? <Loading /> : "Add project "}
+          {isLoading ? <Loading /> : !params.projectId? "Add project " : "Edit project"}
         </button>
       </form>
     </div>
