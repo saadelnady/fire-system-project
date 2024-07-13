@@ -65,7 +65,7 @@ const NotificationsDropDown = () => {
             </g>
           </g>
         </svg>
-        <span className="absolute top-[-10px] right-[-10px] text-white bg-red-600 rounded-full w-fit h-fit p-1">
+        <span className="absolute top-[-10px] right-[-10px] text-white bg-red-600 rounded-full w-[30px] h-[30px] p-1 flex justify-center items-center">
           {total}
         </span>
       </button>

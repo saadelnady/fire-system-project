@@ -8,6 +8,7 @@ import { statisticsReducer } from "./reducers/statistics/statisticsReducer";
 import { typeReducer } from "./reducers/typesReducer/typeReducer";
 import { projectReducer } from "./reducers/projectReducer/projectReducer";
 import { notificationReducer } from "./reducers/notificationReducer/notificationReducer";
+import { paymentReducer } from "./reducers/payments/paymentReducer";
 
 const composeEnhancers =
   typeof window === "object" && window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
@@ -23,5 +24,6 @@ const appReducers = combineReducers({
   typeReducer,
   projectReducer,
   notificationReducer,
+  paymentReducer,
 });
 export const store = createStore(appReducers, enhancer);

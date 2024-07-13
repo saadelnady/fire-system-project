@@ -88,7 +88,7 @@ const Projects = () => {
   }, [dispatch, currentPage, itemsPerPage]);
 
   useEffect(() => {
-    if (searchTerm == "") {
+    if (searchTerm === "") {
       dispatch(
         fetchProjects({
           page: currentPage,
@@ -115,7 +115,6 @@ const Projects = () => {
           />
           <div>
             <h4 className="text-start text-l  text-wrap">
-              {" "}
               {row?.project_name}
             </h4>
             <p className="text-l font-normal">{row?.type_id?.name}</p>
@@ -131,16 +130,20 @@ const Projects = () => {
     },
     {
       header: "payment",
-      render: (row) => <p className={` text-center`}>{row?.payment}</p>,
+      render: (row) => (
+        <p className={` text-center`}>{row?.payment?.payment}</p>
+      ),
     },
     {
       header: "received",
-      render: (row) => <p className={` text-center`}>{row?.received}</p>,
+      render: (row) => (
+        <p className={` text-center`}>{row?.payment?.received}</p>
+      ),
     },
-    {
-      header: "balance",
-      render: (row) => <p className={` text-center`}>{row?.balance}</p>,
-    },
+    // {
+    //   header: "balance",
+    //   render: (row) => <p className={` text-center`}>{row?.balance}</p>,
+    // },
     {
       header: "contract expiration date",
       render: (row) => (

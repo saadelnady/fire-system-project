@@ -44,7 +44,14 @@ const Table = ({ cols, rows, width }) => {
                     key={colIndex}
                     className="p-4 w-[500px] text-sm whitespace-nowrap"
                   >
-                    {col.render ? col.render(row, rowIndex) : row[col.accessor]}
+                    <td
+                      key={colIndex}
+                      className="p-4 w-[500px] text-sm whitespace-nowrap"
+                    >
+                      {col.render
+                        ? col.render(row, rowIndex)
+                        : String(row[col.accessor])}
+                    </td>
                   </td>
                 ))}
               </tr>

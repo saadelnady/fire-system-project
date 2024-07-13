@@ -61,26 +61,6 @@ export const getSearchedOwnersFail = (payLoad) => {
 };
 
 // ==================================================================================
-// export const getSellerProducts = (payLoad) => {
-//   return {
-//     type: PRODUCTS_ACTIONS_TYPES.GET_SELLER_PRODUCTS,
-//     payLoad,
-//   };
-// };
-// export const getSellerProductsSuccess = (payLoad) => {
-//   return {
-//     type: PRODUCTS_ACTIONS_TYPES.GET_SELLER_PRODUCTS_SUCCESS,
-//     payLoad,
-//   };
-// };
-// export const getSellerProductsFail = (payLoad) => {
-//   return {
-//     type: PRODUCTS_ACTIONS_TYPES.GET_SELLER_PRODUCTS_FAIL,
-//     payLoad,
-//   };
-// };
-
-// ==================================================================================
 export const getOwner = () => {
   return {
     type: OWNER_ACTIONS_TYPES.GET_OWNER,

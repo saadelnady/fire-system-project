@@ -11,6 +11,8 @@ import AddNewOwner from "./addOwner/AddOwner.jsx";
 import AddProject from "./addProject/AddProject.jsx";
 import Notifications from "./notifications/Notifications.jsx";
 import Payments from "./payments/Payments.jsx";
+import SingleProject from "./singleProject/SingleProject.jsx";
+import OwnerPayments from "./payments/OwnerPayments.jsx";
 import { Route, Routes } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import NotFoundPage from "./shared/NotFoundPage.jsx";
@@ -53,6 +55,13 @@ const Admin = () => {
 
             <Route path="/addproject" element={<AddProject />} />
             <Route path="/addproject/:projectId" element={<AddProject />} />
+
+            <Route path="/payments" element={<Payments />} />
+            <Route path="/payments/:ownerId" element={<OwnerPayments />} />
+            <Route
+              path="/singleProject/:projectId"
+              element={<SingleProject />}
+            />
             <Route
               path="/addprojectbyOwner/:ownerId"
               element={<AddProject />}
