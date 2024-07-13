@@ -20,10 +20,8 @@ import {
 import { toast } from "react-toastify";
 import moment from "moment";
 import { isObjectNotEmpty } from "../../helpers/checkers.js";
-import formattedDate from "../../helpers/formattedDate.js";
 import Loading from "../shared/Loading/Loading.jsx";
 import Table from "../shared/Table.jsx";
-import { showToast } from "../../helpers/toast_helper.js";
 // import { payments } from "../../assets/data/staticData.js";
 
 const AddProject = () => {
@@ -61,7 +59,7 @@ const AddProject = () => {
       type_id: "",
       payment: 0,
       received: 0,
-      balances: [{ balance_amount: 0, balance_date: "" }],
+      balances: [{ balance_amount: null, balance_date: "" }],
       register_contract_date: "",
       contract_expiry_date: "",
       internal_contract_date: "",
@@ -76,7 +74,7 @@ const AddProject = () => {
       file_number: "",
       comment: "",
       attachments: null,
-      ref_number:''
+      ref_number: "",
     },
     validationSchema: Yup.object({
       project_name: Yup.string().min(2).required("required"),
@@ -88,7 +86,14 @@ const AddProject = () => {
       type_id: Yup.string().length(24).required("required"),
       payment: Yup.number().min(0).required("Payment is required"),
       received: Yup.number().min(0).required("Received is required"),
-      balances: Yup.array(),
+      balances: Yup.array().of(
+        Yup.object().shape({
+          balance_amount: Yup.number()
+            .required("Balance amount is required")
+            .min(0, "Balance amount must be at least 0"),
+          balance_date: Yup.date().required("Balance date is required"),
+        })
+      ),
       contract_expiry_date: Yup.date().required("required"),
       register_contract_date: Yup.date(),
       internal_contract_date: Yup.date().required("required"),
@@ -144,7 +149,7 @@ const AddProject = () => {
     }
     if (values.stickers) {
       formData.append("stickers", values.stickers);
-    }  
+    }
     formData.append("project_name", values.project_name);
     formData.append("client_id", values.client_id);
     formData.append("type_id", values.type_id);
@@ -157,7 +162,7 @@ const AddProject = () => {
     formData.append("fourth_visit", values.fourth_visit);
     formData.append("ref_number", values.ref_number);
 
-    dispatch(editProject(formData,toast,params.projectId));
+    dispatch(editProject(formData, toast, params.projectId));
   };
 
   const handleAdd = (values) => {
@@ -198,15 +203,18 @@ const AddProject = () => {
       formData.append("stickers", values.stickers);
     }
     formData.append("payment", values.payment);
-    formData.append("received",values.received);
+    formData.append("received", values.received);
     if (values.balances.length > 0) {
-      if (values.balances.length === 1 && values.balances[0].balance_amount > 0) {
-          formData.append("balances",JSON.stringify( values.balances));
+      if (
+        values.balances.length === 1 &&
+        values.balances[0].balance_amount > 0
+      ) {
+        formData.append("balances", JSON.stringify(values.balances));
       } else if (values.balances.length > 1) {
-          formData.append("balances", JSON.stringify(values.balances));
+        formData.append("balances", JSON.stringify(values.balances));
       }
-  }
-  
+    }
+
     formData.append("project_name", values.project_name);
     formData.append("client_id", values.client_id);
     formData.append("type_id", values.type_id);
@@ -249,7 +257,6 @@ const AddProject = () => {
     }
   }, []);
 
-
   useEffect(() => {
     if (isObjectNotEmpty(project) && params?.projectId) {
       if (project?.project_img) {
@@ -259,13 +266,13 @@ const AddProject = () => {
       if (project?.istefa_certificate_date) {
         formik.setFieldValue(
           "istefa_certificate_date",
-          moment( project?.istefa_certificate_date).format('YYYY-MM-DD')
+          moment(project?.istefa_certificate_date).format("YYYY-MM-DD")
         );
       }
       if (project?.hasantak_certificate_date) {
         formik.setFieldValue(
           "hasantak_certificate_date",
-          moment(project?.hasantak_certificate_date).format('YYYY-MM-DD')
+          moment(project?.hasantak_certificate_date).format("YYYY-MM-DD")
         );
       }
       if (project?.comment) {
@@ -291,35 +298,55 @@ const AddProject = () => {
 
       formik.setFieldValue("project_name", project?.project_name);
       formik.setFieldValue("client_id", project?.client_id);
-      formik.setFieldValue("type_id", project?.type_id);
+      formik.setFieldValue("type_id", project?.type_id?._id);
 
       formik.setFieldValue(
         "contract_expiry_date",
-        moment(project?.contract_expiry_date).format('YYYY-MM-DD')
+        moment(project?.contract_expiry_date).format("YYYY-MM-DD")
       );
       formik.setFieldValue(
         "internal_contract_date",
-        moment(project?.internal_contract_date).format('YYYY-MM-DD')
+        moment(project?.internal_contract_date).format("YYYY-MM-DD")
       );
 
       if (project?.istefa_certificate_date) {
-        formik.setFieldValue("istefa_certificate_date",moment(project?.istefa_certificate_date).format('YYYY-MM-DD'));
+        formik.setFieldValue(
+          "istefa_certificate_date",
+          moment(project?.istefa_certificate_date).format("YYYY-MM-DD")
+        );
       }
       if (project?.hasantak_certificate_date) {
-        formik.setFieldValue("hasantak_certificate_date",moment(project?.hasantak_certificate_date).format('YYYY-MM-DD'));
+        formik.setFieldValue(
+          "hasantak_certificate_date",
+          moment(project?.hasantak_certificate_date).format("YYYY-MM-DD")
+        );
       }
       if (project?.stickers) {
-        formik.setFieldValue("stickers",moment(project?.stickers).format('YYYY-MM-DD'));
+        formik.setFieldValue(
+          "stickers",
+          moment(project?.stickers).format("YYYY-MM-DD")
+        );
       }
-   
+
       formik.setFieldValue("istefa_certificate", project?.istefa_certificate);
-      formik.setFieldValue("first_visit", moment(project?.first_visit).format('YYYY-MM-DD'));
-      formik.setFieldValue("second_visit",moment( project?.second_visit).format('YYYY-MM-DD'));
-      formik.setFieldValue("third_visit", moment(project?.third_visit).format('YYYY-MM-DD'));
-      formik.setFieldValue("fourth_visit",moment( project?.fourth_visit).format('YYYY-MM-DD'));
+      formik.setFieldValue(
+        "first_visit",
+        moment(project?.first_visit).format("YYYY-MM-DD")
+      );
+      formik.setFieldValue(
+        "second_visit",
+        moment(project?.second_visit).format("YYYY-MM-DD")
+      );
+      formik.setFieldValue(
+        "third_visit",
+        moment(project?.third_visit).format("YYYY-MM-DD")
+      );
+      formik.setFieldValue(
+        "fourth_visit",
+        moment(project?.fourth_visit).format("YYYY-MM-DD")
+      );
     }
   }, [project]);
-
 
   // to get owners
   useEffect(() => {
@@ -337,26 +364,22 @@ const AddProject = () => {
         search: searchTerm,
       })
     );
-
   }, []);
   // to get types
 
-
   useEffect(() => {
     let total_balances = 0;
-  
+
     if (formik.values.balances && Array.isArray(formik.values.balances)) {
       total_balances = formik.values.balances.reduce((total, balance) => {
         return total + parseFloat(balance.balance_amount || 0);
       }, 0);
     }
-  
-  
+
     const received = parseFloat(formik.values.payment || 0) - total_balances;
-  
+
     formik.setFieldValue("received", received);
   }, [formik.values.balances, formik.values.payment]);
-  
 
   //  to calc expire date and internal date and four visits
   useEffect(() => {
@@ -382,25 +405,6 @@ const AddProject = () => {
       formik.setFieldValue("fourth_visit", fourthVisitDate);
     }
   }, [formik.values]);
-
-  // // to calc payments
-  // // ================================================
-  // useEffect(() => {
-  //   const calculateBalance = () => {
-  //     const { payment, balances } = formik.values;
-  //     let total_balances = 0;
-  //     if (balances) {
-  //       total_balances = balances.reduce(
-  //         (total, balance) => total + +balance.balance_amount,
-  //         0
-  //       );
-  //     }
-  //   };
-
-  //   calculateBalance();
-  // }, [formik.values.balances]);
-
-  // ================================================
 
   useEffect(() => {
     if (params?.ownerId) {
@@ -445,29 +449,26 @@ const AddProject = () => {
   const handlePaymentChange = (event) => {
     formik.setFieldValue("payment", event.target.value);
 
-    let total_balances = 0; 
+    let total_balances = 0;
     if (formik.values.balances && Array.isArray(formik.values.balances)) {
       total_balances = formik.values.balances.reduce((total, balance) => {
         return total + parseFloat(balance.balance_amount || 0);
       }, 0);
     }
-  
-    const received = parseFloat(event.target.value || 0) - total_balances;  
+
+    const received = parseFloat(event.target.value || 0) - total_balances;
     formik.setFieldValue("received", received);
   };
 
-
-
-  const handleBalanseChange =  (event, property) => {
-     formik.setFieldValue(property, event.target.value);
+  const handleBalanseChange = (event, property) => {
+    formik.setFieldValue(property, event.target.value);
   };
-  
-  
 
   const columns = [
     {
-      render: (row, rowIndex) =>
-        rowIndex > 0 && (
+      render: (row, rowIndex, rows) =>
+        rowIndex === rows.length - 1 &&
+        rowIndex !== 0 && (
           <button
             onClick={() => deleteRow(rowIndex)}
             className="font-bold border text-xl rounded-full p-5 w-3 h-3 flex items-center justify-center"
@@ -475,6 +476,7 @@ const AddProject = () => {
             -
           </button>
         ),
+
       headerButton: () => (
         <button
           onClick={addNewRow}
@@ -485,29 +487,57 @@ const AddProject = () => {
       ),
     },
     {
-      header: "balance amount",
-      render: (row, rowIndex) => (
-        <FormField
-          id={`balances[${rowIndex}].balance_amount`}
-          type="number"
-          formik={formik}
-          placeholder={`balance-${rowIndex + 1}`}
-          height={"h-fit"}
-          min={0}
-          handleChange={(event)=> handleBalanseChange(event,`balances[${rowIndex}].balance_amount` )}
-        />
+      header: "Balance Amount",
+      render: (row, rowIndex, rows) => (
+        <div className="flex items-center flex-col">
+          {" "}
+          <input
+            name={`balances[${rowIndex}].balance_amount`}
+            type="number"
+            placeholder={`balance-${rowIndex + 1}`}
+            className={`p-2 rounded w-full focus:outline-none focus:ring-2 border focus:ring-blue-100 focus:shadow-lg transition duration-300 ease-in-out ${
+              isDark ? "bg-gray-900 text-white" : "border"
+            } `}
+            min={0}
+            value={formik.values.balances[rowIndex].balance_amount}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+          />
+          {formik.touched.balances &&
+            formik.touched.balances[rowIndex] &&
+            formik.errors.balances &&
+            formik.errors.balances[rowIndex] &&
+            formik.errors.balances[rowIndex].balance_amount && (
+              <div className="text-red-500 text-xs">
+                {formik.errors.balances[rowIndex].balance_amount}
+              </div>
+            )}
+        </div>
       ),
     },
     {
-      header: "balance Date",
-      render: (row, rowIndex) => (
-        <div className="flex items-center">
-          <FormField
-            id={`balances[${rowIndex}].balance_date`}
+      header: "Balance Date",
+      render: (row, rowIndex, rows) => (
+        <div className="flex items-center flex-col">
+          <input
+            name={`balances[${rowIndex}].balance_date`}
             type="date"
-            formik={formik}
-            height={"h-fit"}
+            className={`p-2 rounded w-full focus:outline-none focus:ring-2 border focus:ring-blue-100 focus:shadow-lg transition duration-300 ease-in-out ${
+              isDark ? "bg-gray-900 text-white" : "border"
+            } `}
+            value={formik.values.balances[rowIndex].balance_date}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
           />
+          {formik.touched.balances &&
+            formik.touched.balances[rowIndex] &&
+            formik.errors.balances &&
+            formik.errors.balances[rowIndex] &&
+            formik.errors.balances[rowIndex].balance_date && (
+              <div className="text-red-500 text-xs">
+                {formik.errors.balances[rowIndex].balance_date}
+              </div>
+            )}
         </div>
       ),
     },
@@ -639,46 +669,52 @@ const AddProject = () => {
             handleChange={handleAttachmentsChange}
             formik={formik}
           />
-        
-        
         </div>
         <>
-  { !params.projectId ? (
-      <>
-        <h2 className="text-center font-bold text-xl"> Payments </h2>
-        <div className="flex flex-wrap justify-between items-center">
-          <FormField
-            id="payment"
-            label="Payment"
-            type="number"
-            formik={formik}
-            handleChange={handlePaymentChange}
-          />
-          <FormField
-            id="received"
-            label="received"
-            type="number"
-            isDisabled={true}
-            formik={formik}
-          />
-        </div>
+          {!params.projectId ? (
+            <>
+              <h2 className="text-center font-bold text-xl"> Payments </h2>
+              <div className="flex flex-wrap justify-between items-center">
+                <FormField
+                  id="payment"
+                  label="Payment"
+                  type="number"
+                  formik={formik}
+                  handleChange={handlePaymentChange}
+                />
+                <FormField
+                  id="received"
+                  label="received"
+                  type="number"
+                  isDisabled={true}
+                  formik={formik}
+                />
+              </div>
 
-        <Table cols={columns} rows={formik.values.balances} />
-      </>
-    ) : (
-      <div className="mb-6 bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative text-center" role="alert">
-      To edit payments for this project, please go to the payment tab.
-    </div>    )
-  }
-</>
+              <Table cols={columns} rows={formik.values.balances} />
+            </>
+          ) : (
+            <div
+              className="mb-6 bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative text-center"
+              role="alert"
+            >
+              To edit payments for this project, please go to the payment tab.
+            </div>
+          )}
+        </>
 
-        
         <TextArea id="comment" label="Comment" formik={formik} />
         <button
           type="submit"
           className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 mx-auto block mt-5"
         >
-          {isLoading ? <Loading /> : !params.projectId? "Add project " : "Edit project"}
+          {isLoading ? (
+            <Loading />
+          ) : !params.projectId ? (
+            "Add project "
+          ) : (
+            "Edit project"
+          )}
         </button>
       </form>
     </div>

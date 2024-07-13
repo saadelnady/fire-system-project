@@ -48,7 +48,7 @@ const Table = ({ cols, rows, width }) => {
                       className="p-4 w-[500px] text-sm whitespace-nowrap"
                     >
                       {col.render
-                        ? col.render(row, rowIndex)
+                        ? col.render(row, rowIndex, rows)
                         : String(row[col.accessor])}
                     </td>
                   </td>

@@ -12,7 +12,7 @@ const FormField = ({
   handleChange,
   placeholder,
   height,
-  min
+  min,
 }) => {
   const { isDark } = useSelector((state) => state.modeReducer);
   return (

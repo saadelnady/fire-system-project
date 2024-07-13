@@ -1,6 +1,13 @@
+import { useSelector } from "react-redux";
+
 const ErrorMessage = ({ touched, errors, fieldName, condition = true }) => {
+  const { isDark } = useSelector((state) => state.modeReducer);
   return touched[fieldName] && errors[fieldName] ? (
-    <p className="text-sm-end flex items-center">
+    <p
+      className={`text-sm-end flex items-center ${
+        isDark ? "text-white" : "text-black"
+      }`}
+    >
       <svg
         viewBox="0 0 24 24"
         fill="none"
