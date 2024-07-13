@@ -1,13 +1,7 @@
-<<<<<<< HEAD
-import { useSelector } from "react-redux";
-
-const Table = ({ cols, rows, width }) => {
-=======
 import React from "react";
 import { useSelector } from "react-redux";
 
 const Table = ({ cols, rows, width  }) => {
->>>>>>> 5668ca8 (Initial commit)
   const { isDark } = useSelector((state) => state.modeReducer);
   return (
     <div className={`overflow-x-auto overflow-y-clip mx-auto w-full`}>

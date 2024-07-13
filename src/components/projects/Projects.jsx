@@ -49,10 +49,6 @@ const Projects = () => {
   };
   // =========================================================================
   // =========================================================================
-<<<<<<< HEAD
-
-=======
->>>>>>> 5668ca8 (Initial commit)
   const downloadAttachments = async (id) => {
     try {
       const response = await axios({
@@ -110,12 +106,8 @@ const Projects = () => {
     {
       header: "project Info",
       render: (row) => (
-<<<<<<< HEAD
-        <div className={`flex items-center `}>
-=======
         <Link to={`/singleProject/${row?._id}`}>
           <div className={`flex items-center `}>
->>>>>>> 5668ca8 (Initial commit)
           <img
             className={`w-[50px] h-[50px] me-3 border rounded-full`}
             src={row?.project_img || ueseImg}
@@ -128,10 +120,7 @@ const Projects = () => {
             <p className="text-l font-normal">{row?.type_id?.name}</p>
           </div>
         </div>
-<<<<<<< HEAD
-=======
         </Link>
->>>>>>> 5668ca8 (Initial commit)
       ),
     },
     {
@@ -157,11 +146,7 @@ const Projects = () => {
     //   render: (row) => <p className={` text-center`}>{row?.balance}</p>,
     // },
     {
-<<<<<<< HEAD
-      header: "contract expiration date",
-=======
       header: "CD exp date",
->>>>>>> 5668ca8 (Initial commit)
       render: (row) => (
         <p className={` text-center`}>
           {formattedDate(row?.contract_expiry_date)}
@@ -206,11 +191,7 @@ const Projects = () => {
       ),
     },
     {
-<<<<<<< HEAD
-      header: "hasantak certificate date",
-=======
       header: "hasantak exp date",
->>>>>>> 5668ca8 (Initial commit)
       render: (row) => (
         <p className={` text-center`}>
           {formattedDate(row?.hasantak_certificate_date || "__")}
@@ -218,11 +199,7 @@ const Projects = () => {
       ),
     },
     {
-<<<<<<< HEAD
-      header: "istefa certificate date",
-=======
       header: "istefa exp date",
->>>>>>> 5668ca8 (Initial commit)
       render: (row) => (
         <p className={` text-center`}>
           {formattedDate(row?.istefa_certificate_date || "__")}
@@ -230,11 +207,7 @@ const Projects = () => {
       ),
     },
     {
-<<<<<<< HEAD
-      header: "internal contract date",
-=======
       header: "internal contract exp date",
->>>>>>> 5668ca8 (Initial commit)
       render: (row) => (
         <p className={` text-center`}>
           {formattedDate(row?.internal_contract_date || "__")}
