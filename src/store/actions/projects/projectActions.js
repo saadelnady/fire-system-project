@@ -33,11 +33,7 @@ export const fetchProject = (projectId) => {
     dispatch(actionsCreators.getProject(projectId));
     try {
       const response = await getData(`/v1/projects/${projectId}`);
-<<<<<<< HEAD
       console.log("response", response);
-=======
-      // console.log("response", response);
->>>>>>> 5668ca8 (Initial commit)
       dispatch(actionsCreators.getProjectSuccess(response?.data));
     } catch (error) {
       dispatch(actionsCreators.getProjectFail(error));
