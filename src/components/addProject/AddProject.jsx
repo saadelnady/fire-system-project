@@ -23,6 +23,7 @@ import { isObjectNotEmpty } from "../../helpers/checkers.js";
 import formattedDate from "../../helpers/formattedDate.js";
 import Loading from "../shared/Loading/Loading.jsx";
 import Table from "../shared/Table.jsx";
+import { showToast } from "../../helpers/toast_helper.js";
 // import { payments } from "../../assets/data/staticData.js";
 
 const AddProject = () => {
@@ -30,13 +31,7 @@ const AddProject = () => {
   const { owners } = useSelector((state) => state.ownerReducer);
   const { types } = useSelector((state) => state.typeReducer);
   const { project, isLoading } = useSelector((state) => state.projectReducer);
-  const [payments, setPayments] = useState([
-    {
-      _id: "1",
-      payment: "You have a new friend request.",
-      date: "unread",
-    },
-  ]);
+
   const params = useParams();
   const getIconColor = () => (isDark ? "#eee" : "#000000");
   const dispatch = useDispatch();
@@ -64,10 +59,9 @@ const AddProject = () => {
       ref_number_old: "",
       client_id: "",
       type_id: "",
-      payment: null,
-      received: [{ amount: "", date: "" }],
-      balance: null,
-      // balance_date: "",
+      payment: 0,
+      received: 0,
+      balances: [{ balance_amount: 0, balance_date: "" }],
       register_contract_date: "",
       contract_expiry_date: "",
       internal_contract_date: "",
@@ -91,20 +85,9 @@ const AddProject = () => {
       ),
       client_id: Yup.string().length(24).required("required"),
       type_id: Yup.string().length(24).required("required"),
-      payment: Yup.number()
-        .required("required")
-        .min(Yup.ref("received"), "Payment must be greater than Received"),
-      received: Yup.array()
-        .of(
-          Yup.object().shape({
-            amount: Yup.number()
-              .required("required")
-              .min(0, "Received must be a positive number"),
-            date: Yup.date().required("required"),
-          })
-        )
-        .required("required"),
-      // balance_date: Yup.date(),
+      payment: Yup.number().required("Payment is required"),
+
+      balances: Yup.array(),
       contract_expiry_date: Yup.date().required("required"),
       register_contract_date: Yup.date(),
       internal_contract_date: Yup.date().required("required"),
@@ -209,10 +192,6 @@ const AddProject = () => {
       values.attachments.forEach((attachment) =>
         formData.append("attachments", attachment)
       );
-      // formData.append("attachments", values.attachments);
-    }
-    if (values.balance_date) {
-      formData.append("balance_date", values.balance_date);
     }
 
     if (values.ref_number_old) {
@@ -221,12 +200,13 @@ const AddProject = () => {
     if (values.stickers) {
       formData.append("stickers", values.stickers);
     }
+    formData.append("payment", values.payment);
+    formData.append("received", 0);
+    formData.append("balances", values.balances);
+
     formData.append("project_name", values.project_name);
     formData.append("client_id", values.client_id);
     formData.append("type_id", values.type_id);
-    formData.append("payment", values.payment);
-    formData.append("received", values.received);
-    formData.append("balance", values.balance);
     formData.append("contract_expiry_date", values.contract_expiry_date);
     formData.append("internal_contract_date", values.internal_contract_date);
     formData.append("istefa_certificate", values.istefa_certificate);
@@ -234,8 +214,8 @@ const AddProject = () => {
     formData.append("second_visit", values.second_visit);
     formData.append("third_visit", values.third_visit);
     formData.append("fourth_visit", values.fourth_visit);
-
-    dispatch(addProject({ formData, toast }));
+    console.log("values===", values);
+    // dispatch(addProject({ formData, toast }));
   };
 
   const handleImageChange = (event) => {
@@ -268,74 +248,74 @@ const AddProject = () => {
 
   // to bind project data
   // =================================
-  useEffect(() => {
-    if (isObjectNotEmpty(project) && params?.projectId) {
-      if (project?.project_img) {
-        formik.setFieldValue("imageUrl", project?.project_img);
-      }
+  // useEffect(() => {
+  //   if (isObjectNotEmpty(project) && params?.projectId) {
+  //     if (project?.project_img) {
+  //       formik.setFieldValue("imageUrl", project?.project_img);
+  //     }
 
-      if (project?.istefa_certificate_date) {
-        formik.setFieldValue(
-          "istefa_certificate_date",
-          formattedDate(project?.istefa_certificate_date)
-        );
-      }
-      if (project?.hasantak_certificate_date) {
-        formik.setFieldValue(
-          "hasantak_certificate_date",
-          formattedDate(project?.hasantak_certificate_date)
-        );
-      }
-      if (project?.comment) {
-        formik.setFieldValue("comment", project?.comment);
-      }
-      if (project?.file_number) {
-        formik.setFieldValue("file_number", project?.file_number);
-      }
+  //     if (project?.istefa_certificate_date) {
+  //       formik.setFieldValue(
+  //         "istefa_certificate_date",
+  //         formattedDate(project?.istefa_certificate_date)
+  //       );
+  //     }
+  //     if (project?.hasantak_certificate_date) {
+  //       formik.setFieldValue(
+  //         "hasantak_certificate_date",
+  //         formattedDate(project?.hasantak_certificate_date)
+  //       );
+  //     }
+  //     if (project?.comment) {
+  //       formik.setFieldValue("comment", project?.comment);
+  //     }
+  //     if (project?.file_number) {
+  //       formik.setFieldValue("file_number", project?.file_number);
+  //     }
 
-      if (project?.attachments && project?.attachments.length > 0) {
-        formik.setFieldValue("attachments", project?.attachments);
-      }
-      if (project?.balance_date) {
-        formik.setFieldValue(
-          "balance_date",
-          formattedDate(project?.balance_date)
-        );
-      }
+  //     if (project?.attachments && project?.attachments.length > 0) {
+  //       formik.setFieldValue("attachments", project?.attachments);
+  //     }
+  //     if (project?.balance_date) {
+  //       formik.setFieldValue(
+  //         "balance_date",
+  //         formattedDate(project?.balance_date)
+  //       );
+  //     }
 
-      if (project?.ref_number_old) {
-        formik.setFieldValue("ref_number_old", project?.ref_number_old);
-      }
-      if (project?.stickers) {
-        formik.setFieldValue("stickers", project?.stickers);
-      }
+  //     if (project?.ref_number_old) {
+  //       formik.setFieldValue("ref_number_old", project?.ref_number_old);
+  //     }
+  //     if (project?.stickers) {
+  //       formik.setFieldValue("stickers", project?.stickers);
+  //     }
 
-      formik.setFieldValue("project_name", project?.project_name);
-      formik.setFieldValue("client_id", project?.client_id);
-      formik.setFieldValue("type_id", project?.type_id);
-      formik.setFieldValue("payment", project?.payment);
-      formik.setFieldValue("received", project?.received);
-      formik.setFieldValue("balance", project?.balance);
-      formik.setFieldValue(
-        "contract_expiry_date",
-        formattedDate(project?.contract_expiry_date)
-      );
-      formik.setFieldValue(
-        "internal_contract_date",
-        formattedDate(project?.internal_contract_date)
-      );
+  //     formik.setFieldValue("project_name", project?.project_name);
+  //     formik.setFieldValue("client_id", project?.client_id);
+  //     formik.setFieldValue("type_id", project?.type_id);
+  //     formik.setFieldValue("payment", project?.payment);
+  //     formik.setFieldValue("balances", project?.balances);
+  //     formik.setFieldValue("received", project?.received);
+  //     formik.setFieldValue(
+  //       "contract_expiry_date",
+  //       formattedDate(project?.contract_expiry_date)
+  //     );
+  //     formik.setFieldValue(
+  //       "internal_contract_date",
+  //       formattedDate(project?.internal_contract_date)
+  //     );
 
-      console.log(
-        "project?.internal_contract_date ==>",
-        project?.internal_contract_date
-      );
-      formik.setFieldValue("istefa_certificate", project?.istefa_certificate);
-      formik.setFieldValue("first_visit", project?.first_visit);
-      formik.setFieldValue("second_visit", project?.second_visit);
-      formik.setFieldValue("third_visit", project?.third_visit);
-      formik.setFieldValue("fourth_visit", project?.fourth_visit);
-    }
-  }, [project]);
+  //     console.log(
+  //       "project?.internal_contract_date ==>",
+  //       project?.internal_contract_date
+  //     );
+  //     formik.setFieldValue("istefa_certificate", project?.istefa_certificate);
+  //     formik.setFieldValue("first_visit", project?.first_visit);
+  //     formik.setFieldValue("second_visit", project?.second_visit);
+  //     formik.setFieldValue("third_visit", project?.third_visit);
+  //     formik.setFieldValue("fourth_visit", project?.fourth_visit);
+  //   }
+  // }, [project]);
 
   // ===============================================================================
 
@@ -386,19 +366,23 @@ const AddProject = () => {
   }, []);
 
   // to calc payments
+  // ================================================
   useEffect(() => {
     const calculateBalance = () => {
-      const { payment, received } = formik.values;
-      const totalReceived = received.reduce(
-        (sum, item) => sum + (item.amount || 0),
-        0
-      );
-      const balance = payment - totalReceived;
-      formik.setFieldValue("balance", balance);
+      const { payment, balances } = formik.values;
+      let total_balances = 0;
+      if (balances) {
+        total_balances = balances.reduce(
+          (total, balance) => total + +balance.balance_amount,
+          0
+        );
+      }
     };
 
     calculateBalance();
-  }, [formik.values.payment, formik.values.received, formik.values.amount]);
+  }, [formik.values.balances]);
+
+  // ================================================
 
   useEffect(() => {
     if (params?.ownerId) {
@@ -425,16 +409,19 @@ const AddProject = () => {
   };
 
   const addNewRow = () => {
-    formik.setFieldValue("received", [
-      ...formik.values.received,
-      { amount: "", date: "" },
+    formik.setFieldValue("balances", [
+      ...formik.values.balances,
+      { balance_amount: "", balance_date: "" },
     ]);
   };
   const deleteRow = (rowIndex) => {
-    const updatedReceived = formik.values.received.filter(
+    const oldData = formik.values.balances.filter(
       (_, index) => index !== rowIndex
     );
-    formik.setFieldValue("received", updatedReceived);
+
+    const updatedReceived = [...oldData];
+
+    formik.setFieldValue("balances", updatedReceived);
   };
 
   const columns = [
@@ -443,7 +430,7 @@ const AddProject = () => {
         rowIndex > 0 && (
           <button
             onClick={() => deleteRow(rowIndex)}
-            className=" font-bold border text-xl rounded-full   p-5 w-3 h-3 flex items-center justify-center"
+            className="font-bold border text-xl rounded-full p-5 w-3 h-3 flex items-center justify-center"
           >
             -
           </button>
@@ -458,23 +445,23 @@ const AddProject = () => {
       ),
     },
     {
-      header: "Received",
+      header: "balance amount",
       render: (row, rowIndex) => (
         <FormField
-          id={`received[${rowIndex}].amount`}
+          id={`balances[${rowIndex}].balance_amount`}
           type="number"
           formik={formik}
-          placeholder={`received-${rowIndex + 1}`}
+          placeholder={`balance-${rowIndex + 1}`}
           height={"h-fit"}
         />
       ),
     },
     {
-      header: "Received Date",
+      header: "balance Date",
       render: (row, rowIndex) => (
         <div className="flex items-center">
           <FormField
-            id={`received[${rowIndex}].date`}
+            id={`balances[${rowIndex}].balance_date`}
             type="date"
             formik={formik}
             height={"h-fit"}
@@ -620,26 +607,14 @@ const AddProject = () => {
             formik={formik}
           />
           <FormField
-            id="balance"
-            label="Balance"
+            id="received"
+            label="received"
             type="number"
             formik={formik}
-            isDisabled={true}
           />
         </div>
-        {/* <FormField
-          id="received"
-          label="Received"
-          type="number"
-          formik={formik}
-        />
-        <FormField
-          id="balance_date"
-          label="Balance date"
-          type="date"
-          formik={formik}
-        />  */}
-        <Table cols={columns} rows={formik.values.received} />
+
+        <Table cols={columns} rows={formik.values.balances} />
         <TextArea id="comment" label="Comment" formik={formik} />
         <button
           type="submit"
