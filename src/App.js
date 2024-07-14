@@ -22,17 +22,17 @@ function App() {
   const [socket, setSocket] = useState(null);
   const [user, setUser] = useState("");
   useEffect(() => {
-    if(isLoggedIn){
+    if (isLoggedIn) {
       socket?.on("notification", (message) =>
         showToast(toast, message, "success")
       );
-    }   
+    }
   }, [socket, user]);
 
   useEffect(() => {
     setSocket(io("https://api.fireeaglema.com/"));
   }, []);
-
+  console.log("Some Changes");
   return (
     <div className={`App  ${isDark ? "bg-gray-900" : "bg-white"}  `}>
       <Routes>
