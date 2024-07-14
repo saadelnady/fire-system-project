@@ -49,7 +49,6 @@ const Projects = () => {
   };
   // =========================================================================
   // =========================================================================
-
   const downloadAttachments = async (id) => {
     try {
       const response = await axios({
@@ -107,23 +106,25 @@ const Projects = () => {
     {
       header: "project Info",
       render: (row) => (
-        <div className={`flex items-center `}>
-          <img
-            className={`w-[50px] h-[50px] me-3 border rounded-full`}
-            src={row?.project_img || ueseImg}
-            alt={row?.name}
-          />
-          <div>
-            <h4 className="text-start text-l  text-wrap">
-              {row?.project_name}
-            </h4>
-            <p className="text-l font-normal">{row?.type_id?.name}</p>
+        <Link to={`/singleProject/${row?._id}`}>
+          <div className={`flex items-center `}>
+            <img
+              className={`w-[50px] h-[50px] me-3 border rounded-full`}
+              src={row?.project_img || ueseImg}
+              alt={row?.name}
+            />
+            <div>
+              <h4 className="text-start text-l  text-wrap">
+                {row?.project_name}
+              </h4>
+              <p className="text-l font-normal">{row?.type_id?.name}</p>
+            </div>
           </div>
-        </div>
+        </Link>
       ),
     },
     {
-      header: "Ref Number",
+      header: "old Ref Number",
       render: (row) => (
         <p className={` text-center`}>{row?.ref_number_old || "__"}</p>
       ),
@@ -145,7 +146,7 @@ const Projects = () => {
     //   render: (row) => <p className={` text-center`}>{row?.balance}</p>,
     // },
     {
-      header: "contract expiration date",
+      header: "CD exp date",
       render: (row) => (
         <p className={` text-center`}>
           {formattedDate(row?.contract_expiry_date)}
@@ -190,7 +191,7 @@ const Projects = () => {
       ),
     },
     {
-      header: "hasantak certificate date",
+      header: "hasantak exp date",
       render: (row) => (
         <p className={` text-center`}>
           {formattedDate(row?.hasantak_certificate_date || "__")}
@@ -198,7 +199,7 @@ const Projects = () => {
       ),
     },
     {
-      header: "istefa certificate date",
+      header: "istefa exp date",
       render: (row) => (
         <p className={` text-center`}>
           {formattedDate(row?.istefa_certificate_date || "__")}
@@ -206,7 +207,7 @@ const Projects = () => {
       ),
     },
     {
-      header: "internal contract date",
+      header: "internal contract exp date",
       render: (row) => (
         <p className={` text-center`}>
           {formattedDate(row?.internal_contract_date || "__")}
@@ -285,9 +286,9 @@ const Projects = () => {
 
   return (
     <div
-      className={`font-bold overflow-x-auto min-h-[100vh]  ${
-        isDark ? "text-white" : "text-black"
-      }`}
+      className={`font-bold overflow-x-auto min-h-[100vh]  
+        ${isDark ? "text-white" : "text-black"
+        }`}
     >
       {activeModal && (
         <WarningLayOut
@@ -312,7 +313,7 @@ const Projects = () => {
         <Table
           cols={columns}
           rows={projects}
-          // width={"md:w-[600px] lg:w-[1000px] "}
+        // width={"md:w-[600px] lg:w-[1000px] "}
         />
       )}
 

@@ -77,7 +77,6 @@ const Profile = () => {
     formData.append("email", values?.email);
     // formData.append("phone", values?.phone);
     // formData.append("address", values?.address);
-    console.log(values);
     dispatch(editUserProfile(formData, toast));
   };
 

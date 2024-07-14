@@ -69,7 +69,7 @@ const AddNewOwner = () => {
     formData.append("name", values?.name);
     formData.append("email", values?.email);
 
-    const payload = { formData, toast, navigate: navigateToOwners };
+    const payload = { formData, toast, navigateToOwners };
     dispatch(addOwner(payload));
   };
   const navigateToOwners = () => {
@@ -88,9 +88,7 @@ const AddNewOwner = () => {
     }
     formData.append("name", values?.name);
     formData.append("email", values?.email);
-    dispatch(editOwner(formData, toast, ownerId)).then(() => {
-      navigate("/owners");
-    });
+    dispatch(editOwner(formData, toast, ownerId, navigateToOwners));
   };
 
   useEffect(() => {

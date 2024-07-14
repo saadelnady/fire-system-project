@@ -5,16 +5,14 @@ import { useFormik } from "formik";
 import FormField from "../shared/FormField";
 import SelectInput from "../shared/SelectInput";
 import TextArea from "../shared/TextArea.jsx";
-// import { owners, typesData } from "../../assets/data/staticData";
-import * as Yup from "yup";
+
 import { useEffect, useState } from "react";
 import Attachments from "../shared/Attacments.jsx";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { fetchOwners } from "../../store/actions/Owner/ownerActions.js";
 import { fetchTypes } from "../../store/actions/Types/typeActions.js";
 import {
   addProject,
-  clearproject,
   editProject,
   fetchProject,
 } from "../../store/actions/projects/projectActions.js";
@@ -24,14 +22,13 @@ import { isObjectNotEmpty } from "../../helpers/checkers.js";
 import Loading from "../shared/Loading/Loading.jsx";
 import Table from "../shared/Table.jsx";
 import validationSchema from "./schemaValidation.js";
-// import { payments } from "../../assets/data/staticData.js";
 
 const AddProject = () => {
   const { isDark } = useSelector((state) => state.modeReducer);
   const { owners } = useSelector((state) => state.ownerReducer);
   const { types } = useSelector((state) => state.typeReducer);
   const { project, isLoading } = useSelector((state) => state.projectReducer);
-
+  const navigate = useNavigate();
   const params = useParams();
   const getIconColor = () => (isDark ? "#eee" : "#000000");
   const dispatch = useDispatch();
@@ -61,7 +58,7 @@ const AddProject = () => {
       type_id: "",
       payment: 0,
       received: 0,
-      balances: [{ balance_amount: null, balance_date: "" }],
+      balances: [{ balance_amount: 0, balance_date: "" }],
       register_contract_date: "",
       contract_expiry_date: "",
       internal_contract_date: "",
@@ -87,7 +84,6 @@ const AddProject = () => {
       }
     },
   });
-  console.log("formik", formik.errors);
   const handleEdit = (values) => {
     const formData = new FormData();
     if (values.project_img) {
@@ -199,8 +195,10 @@ const AddProject = () => {
     formData.append("second_visit", values.second_visit);
     formData.append("third_visit", values.third_visit);
     formData.append("fourth_visit", values.fourth_visit);
-    console.log("values===", values);
-    dispatch(addProject({ formData, toast }));
+    //
+    dispatch(
+      addProject({ formData, toast, navigate, ownerId: values.client_id })
+    );
   };
 
   const handleImageChange = (event) => {
@@ -221,18 +219,17 @@ const AddProject = () => {
 
   const handleAttachmentsChange = (event) => {
     const selectedFiles = Array.from(event.target.files);
-    console.log("selectedFiles ====>", selectedFiles);
     formik.setFieldValue("attachments", selectedFiles);
   };
   // to get project data
   useEffect(() => {
-    if (params?.projectId) {
-      dispatch(fetchProject(params?.projectId));
-    }
-  }, []);
+    dispatch(fetchProject(params?.projectId));
+  }, [dispatch]);
 
   useEffect(() => {
-    if (isObjectNotEmpty(project) && params?.projectId) {
+    if (params?.projectId && isObjectNotEmpty(project)) {
+      console.log("project ===>", project);
+      console.log("projectId ===>", params?.projectId);
       if (project?.project_img) {
         formik.setFieldValue("imageUrl", project?.project_img);
       }
@@ -329,7 +326,7 @@ const AddProject = () => {
       formik.setFieldValue("payment", 0);
       formik.setFieldValue("received", 0);
       formik.setFieldValue("balances", [
-        { balance_amount: null, balance_date: "" },
+        { balance_amount: 0, balance_date: "" },
       ]);
 
       formik.setFieldValue("internal_contract_date", "");
@@ -340,9 +337,9 @@ const AddProject = () => {
       formik.setFieldValue("file_number", "");
       formik.setFieldValue("attachments", null);
       formik.setFieldValue("comment", "");
-      dispatch(clearproject());
+      // dispatch(clearproject());
     }
-  }, [params.projectId]);
+  }, [params?.projectId, project]);
 
   // to get owners
   useEffect(() => {
@@ -429,7 +426,7 @@ const AddProject = () => {
   const addNewRow = () => {
     formik.setFieldValue("balances", [
       ...formik.values.balances,
-      { balance_amount: null, balance_date: "" },
+      { balance_amount: 0, balance_date: "" },
     ]);
   };
   const deleteRow = (rowIndex) => {
@@ -540,174 +537,178 @@ const AddProject = () => {
         isDark ? "bg-gray-900 text-white" : "bg-white text-black"
       }`}
     >
-      <form onSubmit={formik.handleSubmit} action="">
-        <ImageComponent
-          formik={formik}
-          img={userImg}
-          getIconColor={getIconColor}
-          handleImageChange={handleImageChange}
-        />
-        <div className="flex flex-wrap justify-between items-center ">
-          <FormField
-            id="project_name"
-            label="Project name"
-            type="text"
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <form onSubmit={formik.handleSubmit} action="">
+          <ImageComponent
             formik={formik}
+            img={userImg}
+            getIconColor={getIconColor}
+            handleImageChange={handleImageChange}
           />
-          <FormField
-            id="ref_number_old"
-            label="Old Ref number"
-            type="text"
-            formik={formik}
-          />
-          <SelectInput
-            options={ownerOptions}
-            formik={formik}
-            label={"Select owner"}
-            id="client_id"
-            handleChange={handleOwnerChange}
-            customComponents={customComponents}
-          />
-          <SelectInput
-            options={typesOptions}
-            formik={formik}
-            label={"Select type"}
-            id="type_id"
-            handleChange={handleTypeChange}
-          />
-          <FormField
-            id="register_contract_date"
-            label="Register contract date"
-            type="date"
-            formik={formik}
-            isDisabled={"disapled"}
-          />
-          <FormField
-            id="internal_contract_date"
-            label="Internal contract date"
-            type="date"
-            formik={formik}
-          />
-          <FormField
-            id="contract_expiry_date"
-            label="Contract expired date"
-            type="date"
-            formik={formik}
-          />
-        </div>
-        <h2 className="text-center font-bold  text-xl">Visits dates </h2>
-        <div className="flex flex-wrap justify-between items-center ">
-          <FormField
-            id="first_visit"
-            label="First visit"
-            type="date"
-            formik={formik}
-          />
-          <FormField
-            id="second_visit"
-            label="Second visit"
-            type="date"
-            formik={formik}
-          />
-          <FormField
-            id="third_visit"
-            label="Third visit"
-            type="date"
-            formik={formik}
-          />
-          <FormField
-            id="fourth_visit"
-            label="Fourth visit"
-            type="date"
-            formik={formik}
-          />
-        </div>
-        <h2 className="text-center font-bold text-xl "> Others </h2>
-        <div className="flex flex-wrap justify-between items-center ">
-          <FormField
-            id="istefa_certificate"
-            label="Istefa certificate"
-            type="text"
-            formik={formik}
-          />
-          <FormField
-            id="istefa_certificate_date"
-            label="Istefa certificate date"
-            type="date"
-            formik={formik}
-          />
-          <FormField
-            id="hasantak_certificate_date"
-            label="Hasantak certificate date"
-            type="date"
-            formik={formik}
-          />
-          <FormField
-            id="stickers"
-            label="Stickers"
-            type="date"
-            formik={formik}
-          />
-          <FormField
-            id="file_number"
-            label="File number"
-            type="text"
-            formik={formik}
-          />
-          <Attachments
-            id="attachments"
-            label="Attachments"
-            handleChange={handleAttachmentsChange}
-            formik={formik}
-          />
-        </div>
-        <>
-          {!params.projectId ? (
-            <>
-              <h2 className="text-center font-bold text-xl"> Payments </h2>
-              <div className="flex flex-wrap justify-between items-center">
-                <FormField
-                  id="payment"
-                  label="Payment"
-                  type="number"
-                  formik={formik}
-                  handleChange={handlePaymentChange}
-                />
-                <FormField
-                  id="received"
-                  label="received"
-                  type="number"
-                  isDisabled={true}
-                  formik={formik}
-                />
+          <div className="flex flex-wrap justify-between items-center ">
+            <FormField
+              id="project_name"
+              label="Project name"
+              type="text"
+              formik={formik}
+            />
+            <FormField
+              id="ref_number_old"
+              label="Old Ref number"
+              type="text"
+              formik={formik}
+            />
+            <SelectInput
+              options={ownerOptions}
+              formik={formik}
+              label={"Select owner"}
+              id="client_id"
+              handleChange={handleOwnerChange}
+              customComponents={customComponents}
+            />
+            <SelectInput
+              options={typesOptions}
+              formik={formik}
+              label={"Select type"}
+              id="type_id"
+              handleChange={handleTypeChange}
+            />
+            <FormField
+              id="register_contract_date"
+              label="Register contract date"
+              type="date"
+              formik={formik}
+              isDisabled={"disapled"}
+            />
+            <FormField
+              id="internal_contract_date"
+              label="Internal contract date"
+              type="date"
+              formik={formik}
+            />
+            <FormField
+              id="contract_expiry_date"
+              label="Contract expired date"
+              type="date"
+              formik={formik}
+            />
+          </div>
+          <h2 className="text-center font-bold  text-xl">Visits dates </h2>
+          <div className="flex flex-wrap justify-between items-center ">
+            <FormField
+              id="first_visit"
+              label="First visit"
+              type="date"
+              formik={formik}
+            />
+            <FormField
+              id="second_visit"
+              label="Second visit"
+              type="date"
+              formik={formik}
+            />
+            <FormField
+              id="third_visit"
+              label="Third visit"
+              type="date"
+              formik={formik}
+            />
+            <FormField
+              id="fourth_visit"
+              label="Fourth visit"
+              type="date"
+              formik={formik}
+            />
+          </div>
+          <h2 className="text-center font-bold text-xl "> Others </h2>
+          <div className="flex flex-wrap justify-between items-center ">
+            <FormField
+              id="istefa_certificate"
+              label="Istefa certificate"
+              type="text"
+              formik={formik}
+            />
+            <FormField
+              id="istefa_certificate_date"
+              label="Istefa certificate date"
+              type="date"
+              formik={formik}
+            />
+            <FormField
+              id="hasantak_certificate_date"
+              label="Hasantak certificate date"
+              type="date"
+              formik={formik}
+            />
+            <FormField
+              id="stickers"
+              label="Stickers"
+              type="date"
+              formik={formik}
+            />
+            <FormField
+              id="file_number"
+              label="File number"
+              type="text"
+              formik={formik}
+            />
+            <Attachments
+              id="attachments"
+              label="Attachments"
+              handleChange={handleAttachmentsChange}
+              formik={formik}
+            />
+          </div>
+          <>
+            {!params.projectId ? (
+              <>
+                <h2 className="text-center font-bold text-xl"> Payments </h2>
+                <div className="flex flex-wrap justify-between items-center">
+                  <FormField
+                    id="payment"
+                    label="Payment"
+                    type="number"
+                    formik={formik}
+                    handleChange={handlePaymentChange}
+                  />
+                  <FormField
+                    id="received"
+                    label="received"
+                    type="number"
+                    isDisabled={true}
+                    formik={formik}
+                  />
+                </div>
+
+                <Table cols={columns} rows={formik.values.balances} />
+              </>
+            ) : (
+              <div
+                className="mb-6 bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative text-center"
+                role="alert"
+              >
+                To edit payments for this project, please go to the payment tab.
               </div>
+            )}
+          </>
 
-              <Table cols={columns} rows={formik.values.balances} />
-            </>
-          ) : (
-            <div
-              className="mb-6 bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative text-center"
-              role="alert"
-            >
-              To edit payments for this project, please go to the payment tab.
-            </div>
-          )}
-        </>
-
-        <TextArea id="comment" label="Comment" formik={formik} />
-        <button
-          type="submit"
-          className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 mx-auto block mt-5"
-        >
-          {isLoading ? (
-            <Loading />
-          ) : !params.projectId ? (
-            "Add project "
-          ) : (
-            "Edit project"
-          )}
-        </button>
-      </form>
+          <TextArea id="comment" label="Comment" formik={formik} />
+          <button
+            type="submit"
+            className="bg-blue-500 text-white font-bold py-2 px-4 rounded hover:bg-blue-700 mx-auto block mt-5"
+          >
+            {isLoading ? (
+              <Loading />
+            ) : !params.projectId ? (
+              "Add project "
+            ) : (
+              "Edit project"
+            )}
+          </button>
+        </form>
+      )}
     </div>
   );
 };

@@ -62,7 +62,7 @@ export const fetchOwnerProjects = ({
   };
 };
 /* ================================================================================================== */
-export const addOwner = ({ formData, toast, navigate }) => {
+export const addOwner = ({ formData, toast, navigateToOwners }) => {
   return async (dispatch) => {
     dispatch(actionsCreators.addOwner(formData));
     try {
@@ -70,7 +70,7 @@ export const addOwner = ({ formData, toast, navigate }) => {
       if (response?.status) {
         dispatch(actionsCreators.addOwnerSuccess(response));
         showToast(toast, response?.message, "success");
-        navigate();
+        navigateToOwners();
       }
     } catch (error) {
       console.log(error);
@@ -80,7 +80,7 @@ export const addOwner = ({ formData, toast, navigate }) => {
   };
 };
 /* ================================================================================================== */
-export const editOwner = (payload, toast, ownerId) => {
+export const editOwner = (payload, toast, ownerId, navigateToOwners) => {
   return async (dispatch) => {
     dispatch(actionsCreators.editOwner(payload));
     try {
@@ -89,6 +89,7 @@ export const editOwner = (payload, toast, ownerId) => {
       if (response?.status) {
         dispatch(actionsCreators.editOwnerSuccess(response?.data));
         showToast(toast, response?.message, "success");
+        navigateToOwners();
       }
     } catch (error) {
       console.log(error);

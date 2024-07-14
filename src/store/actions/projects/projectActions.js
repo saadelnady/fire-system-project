@@ -42,17 +42,19 @@ export const fetchProject = (projectId) => {
 };
 
 /* ================================================================================================== */
-export const addProject = ({ formData, toast }) => {
+export const addProject = ({ formData, toast, navigate, ownerId }) => {
   return async (dispatch) => {
     dispatch(actionsCreators.addProject(formData));
     try {
       const response = await postData(`/v1/projects`, formData);
+      console.log("response====>", response);
       if (response?.status) {
-        // console.log("response====>", response);
         dispatch(actionsCreators.addProjectSuccess(response?.data));
         showToast(toast, response?.message, "success");
+        // setTimeout(() => {
+        //   navigate(`/owners/${ownerId}`);
+        // }, 300);
       }
-      console.log("reponse==>", response);
     } catch (error) {
       console.log("error", error);
       dispatch(actionsCreators.addProjectFail(error?.response?.data?.message));

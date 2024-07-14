@@ -9,7 +9,6 @@ const NotificationsDropDown = () => {
   const { notificationsDropdown, isLoading, total } = useSelector(
     (state) => state.notificationReducer
   );
-  console.log(notificationsDropdown?.list);
   const dropdownRef = useRef(null);
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
