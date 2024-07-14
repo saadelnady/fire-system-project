@@ -11,8 +11,7 @@ const Pagination = ({ totalPages, paginate, currentPage }) => {
 
   return (
     <div className="flex justify-center items-center mt-4 overflow-x-auto">
-      <nav className="relative z-0 inline-flex shadow-sm rounded-md">
-        {/* Previous Button */}
+      <nav className="relative z-0 inline-flex items-center shadow-sm rounded-md">
         <button
           onClick={() => paginate(currentPage - 1)}
           disabled={currentPage === 1}

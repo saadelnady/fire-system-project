@@ -22,21 +22,9 @@ const OwnerPayments = () => {
   }, [ownerId]);
 
   // =========================================================================
-  const [activeModal, setActiveModel] = useState(false);
-  const activeModalHandler = () => {
-    setActiveModel(!activeModal);
-  };
-  // =========================================================================
 
   return (
     <div className=" min-vh-100 ">
-      {activeModal && (
-        <WarningLayOut
-          activeModal={activeModal}
-          activeModalHandler={activeModalHandler}
-          // handleDelete={deleteHandler}
-        />
-      )}
       {isLoading ? (
         <Loading />
       ) : (

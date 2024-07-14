@@ -53,7 +53,6 @@ const paymentReducer = (state = initialState, action) => {
       console.log("action.payLoad ====>", action.payLoad);
       return {
         ...state,
-        payments: [...state.statistics, action.payLoad],
         isLoading: false,
         error: null,
       };
@@ -68,12 +67,23 @@ const paymentReducer = (state = initialState, action) => {
       console.log("action.payLoad ====>", action.payLoad);
       return {
         ...state,
-        payments: [...state.statistics, action.payLoad],
+        isLoading: false,
+        error: null,
+      };
+    // ================================================================
+    case PAYMENT_ACTIONS_TYPES.POST_PAYMENT:
+      return { ...state, isLoading: true };
+
+    case PAYMENT_ACTIONS_TYPES.POST_PAYMENT_SUCCESS:
+      console.log("action.payLoad ====>", action.payLoad);
+      return {
+        ...state,
+
         isLoading: false,
         error: null,
       };
 
-    case PAYMENT_ACTIONS_TYPES.DELETE_PAYMENT_FAIL:
+    case PAYMENT_ACTIONS_TYPES.POST_PAYMENT_FAIL:
       return { ...state, isLoading: false, error: action.payLoad };
 
     default:
