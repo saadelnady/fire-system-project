@@ -65,6 +65,9 @@ export const editProject = (payload, toast, projectId) => {
   return async (dispatch) => {
     dispatch(actionsCreators.editProject(payload));
     try {
+      console.log("payload ===>", payload);
+      console.log("projectId ===>", projectId);
+
       const response = await putData(`/v1/projects/${projectId}`, payload);
       if (response?.status) {
         dispatch(actionsCreators.editProjectSuccess(response?.data));

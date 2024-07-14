@@ -132,16 +132,20 @@ const Owner = () => {
     },
     {
       header: "payment",
-      render: (row) => <p className="flex items-center">{row?.payment}</p>,
+      render: (row) => (
+        <p className={` text-center`}>{row?.payment?.payment}</p>
+      ),
     },
     {
       header: "received",
-      render: (row) => <p className="flex items-center">{row?.received}</p>,
+      render: (row) => (
+        <p className={` text-center`}>{row?.payment?.received}</p>
+      ),
     },
-    {
-      header: "balance",
-      render: (row) => <p className="flex items-center">{row?.balance}</p>,
-    },
+    // {
+    //   header: "balance",
+    //   render: (row) => <p className="flex items-center">{row?.balance}</p>,
+    // },
     {
       header: "first visit",
       render: (row) => (
@@ -253,7 +257,6 @@ const Owner = () => {
   const searchOwnerProjectsHandler = (event) => {
     const searchTerm = event.target.value;
     setSearchTerm(searchTerm);
-   
   };
   // =========================================================================
   // pagination
@@ -261,7 +264,7 @@ const Owner = () => {
   const [itemsPerPage] = useState(10);
 
   useEffect(() => {
-    if (ownerId ) {
+    if (ownerId) {
       dispatch(
         fetchOwnerProjects({
           ownerId,
@@ -274,7 +277,7 @@ const Owner = () => {
   }, [dispatch, currentPage, itemsPerPage]);
 
   useEffect(() => {
-    if (ownerId && searchTerm=='') {
+    if (ownerId && searchTerm == "") {
       dispatch(
         fetchOwnerProjects({
           ownerId,
@@ -286,10 +289,7 @@ const Owner = () => {
     }
   }, [searchTerm]);
 
-
-  
-
-  const onClickSearchIcon=()=>{
+  const onClickSearchIcon = () => {
     if (ownerId) {
       dispatch(
         fetchOwnerProjects({
@@ -300,7 +300,7 @@ const Owner = () => {
         })
       );
     }
-  }
+  };
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   // =========================================================================
   // =========================================================================
@@ -319,7 +319,11 @@ const Owner = () => {
       )}
       <OwnerCard />
       <div className="flex flex-col justify-between h-full  w-full md:w-[600px] ">
-        <Search handler={searchOwnerProjectsHandler} searchTerm={searchTerm} onClickSearchIcon={onClickSearchIcon} />
+        <Search
+          handler={searchOwnerProjectsHandler}
+          searchTerm={searchTerm}
+          onClickSearchIcon={onClickSearchIcon}
+        />
         {isLoading ? (
           <Loading />
         ) : (

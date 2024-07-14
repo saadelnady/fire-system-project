@@ -114,6 +114,24 @@ const projectReducer = (state = initialState, action) => {
         isLoading: false,
         error: action?.payLoad,
       };
+    // ====================================================================================================
+    case PROJECT_ACTIONS_TYPES.CLEAR_PROJECT:
+      return {
+        ...state,
+        isLoading: true,
+      };
+    case PROJECT_ACTIONS_TYPES.CLEAR_PROJECT_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        project: {},
+      };
+    case PROJECT_ACTIONS_TYPES.CLEAR_PROJECT_FAIL:
+      return {
+        ...state,
+        isLoading: false,
+        error: action?.payLoad,
+      };
 
     default:
       return state;
