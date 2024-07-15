@@ -329,7 +329,6 @@ const AddProject = () => {
         { balance_amount: 0, balance_date: "" },
       ]);
 
-      formik.setFieldValue("internal_contract_date", "");
       formik.setFieldValue("istefa_certificate", "");
       formik.setFieldValue("istefa_certificate_date", "");
       formik.setFieldValue("hasantak_certificate_date", "");
@@ -386,18 +385,31 @@ const AddProject = () => {
       formik.setFieldValue("register_contract_date", currentDate);
       formik.setFieldValue("contract_expiry_date", newExpiryDate);
       formik.setFieldValue("internal_contract_date", newInternalContractDate);
-
-      const firstVisitDate = moment().add(3, "months").format("YYYY-MM-DD");
-      const secondVisitDate = moment().add(6, "months").format("YYYY-MM-DD");
-      const thirdVisitDate = moment().add(9, "months").format("YYYY-MM-DD");
-      const fourthVisitDate = moment().add(12, "months").format("YYYY-MM-DD");
-
-      formik.setFieldValue("first_visit", firstVisitDate);
-      formik.setFieldValue("second_visit", secondVisitDate);
-      formik.setFieldValue("third_visit", thirdVisitDate);
-      formik.setFieldValue("fourth_visit", fourthVisitDate);
     }
-  }, [formik.values]);
+  }, []);
+
+  const updateVisitDates = (firstVisitDate) => {
+    const secondVisitDate = moment(firstVisitDate).add(3, "months");
+    const thirdVisitDate = moment(firstVisitDate).add(6, "months");
+    const fourthVisitDate = moment(firstVisitDate).add(9, "months");
+
+    formik.setFieldValue("second_visit", secondVisitDate.format("YYYY-MM-DD"));
+    formik.setFieldValue("third_visit", thirdVisitDate.format("YYYY-MM-DD"));
+    formik.setFieldValue("fourth_visit", fourthVisitDate.format("YYYY-MM-DD"));
+  };
+
+  useEffect(() => {
+    const firstVisitDate = moment().add(3, "months");
+    formik.setFieldValue("first_visit", firstVisitDate.format("YYYY-MM-DD"));
+    updateVisitDates(firstVisitDate);
+  }, []);
+
+  useEffect(() => {
+    const firstVisitDate = formik.values.first_visit;
+    if (firstVisitDate) {
+      updateVisitDates(moment(firstVisitDate));
+    }
+  }, [formik.values.first_visit]);
 
   useEffect(() => {
     if (params?.ownerId) {
