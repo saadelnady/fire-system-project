@@ -83,23 +83,31 @@ const ProjectPayments = () => {
     {
       header: "Edit",
       render: (row) => (
-        <button
-          onClick={() => handleEditPayment(row)}
-          className="text-blue-600 hover:text-blue-900"
-        >
-          Edit
-        </button>
+        <div>
+          {!row?.balance_status && (
+            <button
+              onClick={() => handleEditPayment(row)}
+              className="text-blue-600 hover:text-blue-900"
+            >
+              Edit
+            </button>
+          )}
+        </div>
       ),
     },
     {
       header: "Delete",
       render: (row) => (
-        <button
-          onClick={() => handleIsDeletePopupOpen(row)}
-          className="text-blue-600 hover:text-blue-900"
-        >
-          Delete
-        </button>
+        <div>
+          {!row?.balance_status && (
+            <button
+              onClick={() => handleIsDeletePopupOpen(row)}
+              className="text-blue-600 hover:text-blue-900"
+            >
+              Delete
+            </button>
+          )}
+        </div>
       ),
     },
     {
