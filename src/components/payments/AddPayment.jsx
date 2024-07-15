@@ -28,7 +28,11 @@ const AddPayment = ({
       balance_date: "",
     },
     validationSchema: Yup.object({
-      balance_amount: Yup.number().required("required"),
+      balance_amount: Yup.number()
+        .min(1, "amount must be greater than or equal to 1")
+        .positive("amount must be a positive number")
+        .integer("amount must be an integer")
+        .required("required"),
       balance_date: Yup.string().required("required"),
     }),
     onSubmit: (values) => {
