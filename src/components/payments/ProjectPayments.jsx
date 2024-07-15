@@ -119,7 +119,7 @@ const ProjectPayments = () => {
 
   return (
     <div
-      className={`p-6 rounded-lg shadow-lg mb-6  ${
+      className={`p-6 rounded-lg shadow-lg mb-6 min-h-[100vh]  ${
         isDark ? "bg-gray-900 text-white" : "bg-white text-black "
       }`}
     >
