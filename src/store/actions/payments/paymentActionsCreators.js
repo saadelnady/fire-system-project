@@ -99,6 +99,25 @@ export const deletePaymentFail = (payLoad) => {
     payLoad,
   };
 };
+// ========================================================================
+export const checkPaymentPaid = (payLoad) => {
+  return {
+    type: PAYMENT_ACTIONS_TYPES.CHECK_PAYMENT_PAID,
+    payLoad,
+  };
+};
+export const checkPaymentPaidSuccess = (payLoad) => {
+  return {
+    type: PAYMENT_ACTIONS_TYPES.CHECK_PAYMENT_PAID_SUCCESS,
+    payLoad,
+  };
+};
+export const checkPaymentPaidFail = (payLoad) => {
+  return {
+    type: PAYMENT_ACTIONS_TYPES.CHECK_PAYMENT_PAID_FAIL,
+    payLoad,
+  };
+};
 // ==================================================================================
 
 export const clearPayment = () => {

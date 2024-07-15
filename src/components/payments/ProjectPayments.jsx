@@ -1,10 +1,15 @@
 import moment from "moment";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import DeletePayment from "./DeletePayment";
 import AddPayment from "./AddPayment";
 import Loading from "../shared/Loading/Loading";
 import Table from "../shared/Table";
+import { toast } from "react-toastify";
+import {
+  chechPaymentPaid,
+  fetchPayment,
+} from "../../store/actions/payments/paymentActions";
 
 const ProjectPayments = () => {
   const { payment, isLoading } = useSelector((state) => state.paymentReducer);
@@ -12,6 +17,7 @@ const ProjectPayments = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const [targetPayment, setTargetPayment] = useState({});
+  const dispatch = useDispatch();
   const handlePopUpOpen = () => {
     setIsPopupOpen(!isPopupOpen);
   };
@@ -30,16 +36,34 @@ const ProjectPayments = () => {
     setTargetPayment(myTargetPayment);
     handlePopUpOpen();
   };
+  const checkPaymentPaid = (checkedPaymentId) => {
+    dispatch(chechPaymentPaid(checkedPaymentId, toast, getPayment));
+  };
 
+  const getPayment = () => {
+    dispatch(fetchPayment(payment?.client_id));
+  };
   const columns = [
     {
       header: "id",
-      render: (row, rowIndex) => <p className={` `}>{rowIndex + 1}</p>,
+      render: (row, rowIndex) => (
+        <p
+          className={`${
+            row?.balance_status ? "text-green-500 line-through" : "text-black "
+          } `}
+        >
+          {rowIndex + 1}
+        </p>
+      ),
     },
     {
       header: "Amount",
       render: (row) => (
-        <div className={`flex items-center `}>
+        <div
+          className={`flex items-center ${
+            row?.balance_status ? "text-green-500 line-through" : "text-black "
+          }`}
+        >
           {row?.balance_amount || "__"}
         </div>
       ),
@@ -47,7 +71,11 @@ const ProjectPayments = () => {
     {
       header: "Date",
       render: (row) => (
-        <p className={`flex items-center`}>
+        <p
+          className={`flex items-center ${
+            row?.balance_status ? "text-green-500 line-through" : "text-black "
+          }`}
+        >
           {moment(row?.balance_date).format("YYYY-M-D")}
         </p>
       ),
@@ -79,8 +107,10 @@ const ProjectPayments = () => {
       render: (row) => (
         <input
           type="checkbox"
-          checked={payment.paid}
-          //   onChange={() => handlePaidChange(row?._id)}
+          checked={row?.balance_status}
+          onClick={() => {
+            checkPaymentPaid(row?._id);
+          }}
           className="form-checkbox h-5 w-5 text-blue-600"
         />
       ),

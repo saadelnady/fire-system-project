@@ -85,6 +85,20 @@ const paymentReducer = (state = initialState, action) => {
 
     case PAYMENT_ACTIONS_TYPES.POST_PAYMENT_FAIL:
       return { ...state, isLoading: false, error: action.payLoad };
+    // ================================================================
+    case PAYMENT_ACTIONS_TYPES.CHECK_PAYMENT_PAID:
+      return { ...state, isLoading: true };
+
+    case PAYMENT_ACTIONS_TYPES.CHECK_PAYMENT_PAID_SUCCESS:
+      console.log("action.payLoad ====>", action.payLoad);
+      return {
+        ...state,
+        isLoading: false,
+        error: null,
+      };
+
+    case PAYMENT_ACTIONS_TYPES.CHECK_PAYMENT_PAID_FAIL:
+      return { ...state, isLoading: false, error: action.payLoad };
 
     default:
       return state;

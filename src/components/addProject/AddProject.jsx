@@ -132,7 +132,7 @@ const AddProject = () => {
     formData.append("fourth_visit", values.fourth_visit);
     formData.append("ref_number", values.ref_number);
 
-    dispatch(editProject(formData, toast, params?.projectId));
+    dispatch(editProject(formData, toast, params?.projectId, navigate));
   };
 
   const handleAdd = (values) => {

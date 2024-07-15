@@ -130,6 +130,12 @@ const Projects = () => {
       ),
     },
     {
+      header: "Ref Number",
+      render: (row) => (
+        <p className={` text-center`}>{row?.ref_number || "__"}</p>
+      ),
+    },
+    {
       header: "payment",
       render: (row) => (
         <p className={` text-center`}>{row?.payment?.payment}</p>
@@ -287,8 +293,7 @@ const Projects = () => {
   return (
     <div
       className={`font-bold overflow-x-auto min-h-[100vh]  
-        ${isDark ? "text-white" : "text-black"
-        }`}
+        ${isDark ? "text-white" : "text-black"}`}
     >
       {activeModal && (
         <WarningLayOut
@@ -299,7 +304,11 @@ const Projects = () => {
       )}
       {/* <div className="flex items-center md:w-[700px] lg:w-[1000px]  mx-auto justify-between mt-4 flex-wrap"> */}
       <div className="flex items-center  mx-auto justify-between mt-4 flex-wrap">
-        <Search handler={searchProjectsHandler} searchTerm={searchTerm} />
+        <Search
+          handler={searchProjectsHandler}
+          searchTerm={searchTerm}
+          onClickSearchIcon={onClickSearchIcon}
+        />
         <Link
           className={`rounded flex p-2 text-white bg-blue-800 `}
           to={"/addproject"}
@@ -313,7 +322,7 @@ const Projects = () => {
         <Table
           cols={columns}
           rows={projects}
-        // width={"md:w-[600px] lg:w-[1000px] "}
+          // width={"md:w-[600px] lg:w-[1000px] "}
         />
       )}
 

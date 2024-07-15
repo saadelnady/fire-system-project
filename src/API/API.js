@@ -56,3 +56,6 @@ export const putData = async (URL, data, customHeaders = {}) => {
 export const deleteData = async (URL, customHeaders = {}) => {
   return handleRequest("delete", URL, null, customHeaders);
 };
+export const patchData = async (URL, customHeaders = {}) => {
+  return handleRequest("patch", URL, null, customHeaders);
+};

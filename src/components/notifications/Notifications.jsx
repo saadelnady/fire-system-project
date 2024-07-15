@@ -90,13 +90,13 @@ const Notifications = () => {
   };
   const columns = [
     {
-      header: "Read",
+      header: "Done",
       render: (row) => (
         <div className={`flex items-center`}>
           <input
             type="checkbox"
             id="read"
-            checked={row.action_status}
+            checked={row?.action_status}
             onClick={() => {
               checkNotificationHandler(row?._id);
             }}

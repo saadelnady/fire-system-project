@@ -51,9 +51,9 @@ export const addProject = ({ formData, toast, navigate, ownerId }) => {
       if (response?.status) {
         dispatch(actionsCreators.addProjectSuccess(response?.data));
         showToast(toast, response?.message, "success");
-        // setTimeout(() => {
-        //   navigate(`/owners/${ownerId}`);
-        // }, 300);
+        setTimeout(() => {
+          navigate(`/projects`);
+        }, 300);
       }
     } catch (error) {
       console.log("error", error);
@@ -63,7 +63,7 @@ export const addProject = ({ formData, toast, navigate, ownerId }) => {
   };
 };
 /* ================================================================================================== */
-export const editProject = (payload, toast, projectId) => {
+export const editProject = (payload, toast, projectId, navigate) => {
   return async (dispatch) => {
     dispatch(actionsCreators.editProject(payload));
     try {
@@ -74,6 +74,9 @@ export const editProject = (payload, toast, projectId) => {
       if (response?.status) {
         dispatch(actionsCreators.editProjectSuccess(response?.data));
         showToast(toast, response?.message, "success");
+        setTimeout(() => {
+          navigate(`/projects`);
+        }, 300);
       }
     } catch (error) {
       dispatch(actionsCreators.editProjectFail(error?.response?.data?.message));

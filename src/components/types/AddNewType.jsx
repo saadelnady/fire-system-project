@@ -9,7 +9,10 @@ import { toast } from "react-toastify";
 import { isObjectNotEmpty } from "../../helpers/checkers";
 
 const validationSchema = Yup.object().shape({
-  name: Yup.string().trim().required("required."),
+  name: Yup.string()
+    .trim()
+    .required("required.")
+    .max(24, "length must be less than or equal to 24 characters long"),
   description: Yup.string().required("required.").trim(),
 });
 

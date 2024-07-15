@@ -1,5 +1,11 @@
 import { toast } from "react-toastify";
-import { deleteData, getData, postData, putData } from "../../../API/API";
+import {
+  deleteData,
+  getData,
+  patchData,
+  postData,
+  putData,
+} from "../../../API/API";
 import { showToast } from "../../../helpers/toast_helper";
 import * as actionsCreators from "./paymentActionsCreators.js";
 
@@ -93,6 +99,24 @@ export const deletePayment = (balance_id, toast, fetchPayment) => {
     } catch (error) {
       dispatch(
         actionsCreators.deletePaymentFail(error?.response?.data?.message)
+      );
+      showToast(toast, error?.response?.data?.message, "error");
+    }
+  };
+};
+/* ================================================================================================== */
+export const chechPaymentPaid = (balance_id, toast, fetchPayment) => {
+  return async (dispatch) => {
+    dispatch(actionsCreators.checkPaymentPaid(balance_id));
+    try {
+      const response = await patchData(`/v1/balances/${balance_id}`);
+      console.log("response ====>", response);
+      dispatch(actionsCreators.checkPaymentPaidSuccess(response));
+      showToast(toast, response?.message, "success");
+      fetchPayment();
+    } catch (error) {
+      dispatch(
+        actionsCreators.checkPaymentPaidFail(error?.response?.data?.message)
       );
       showToast(toast, error?.response?.data?.message, "error");
     }
