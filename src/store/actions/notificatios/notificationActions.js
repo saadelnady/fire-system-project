@@ -45,6 +45,7 @@ export const fetchDropdownNotifications = ({
       if (page) params.append("page", page);
       if (search) params.append("search", search);
       params.append("action_status", false);
+      params.append("send_status", true);
       const response = await getData(`/v1/notifications/?${params.toString()}`);
       dispatch(actionsCreators.getNotificationsDropdownSuccess(response));
     } catch (error) {

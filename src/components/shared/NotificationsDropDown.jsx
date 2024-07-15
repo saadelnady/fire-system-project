@@ -78,25 +78,32 @@ const NotificationsDropDown = () => {
           <div className="p-4 ">
             <h4 className="font-bold mb-2 border-b-2 pb-2">Notifications</h4>
             <ul className=" h-[300px] overflow-y-auto  ">
-              {notificationsDropdown?.list?.map((notification, index) => (
-                <li
-                  className={`py-3 hover:text-black border-b-2 flex items-center ${
-                    isDark ? "hover:bg-gray-900" : "hover:bg-gray-100"
-                  } `}
-                >
-                  <img
-                    src={notification?.project_id?.project_img}
-                    alt="project_img"
-                    className="rounded-full w-[50px] h-[50px] object-cover border me-3"
-                  />
-                  <div>
-                    <p className="font-bold">
-                      {notification?.project_id?.project_name}
-                    </p>
-                    <p>{notification?.message}</p>
-                  </div>
-                </li>
-              ))}
+              {notificationsDropdown?.list &&
+              notificationsDropdown?.list?.length > 0 ? (
+                notificationsDropdown?.list?.map((notification, index) => (
+                  <li
+                    className={`py-3 hover:text-black border-b-2 flex items-center ${
+                      isDark ? "hover:bg-gray-900" : "hover:bg-gray-100"
+                    } `}
+                  >
+                    <img
+                      src={notification?.project_id?.project_img}
+                      alt="project_img"
+                      className="rounded-full w-[50px] h-[50px] object-cover border me-3"
+                    />
+                    <div>
+                      <p className="font-bold">
+                        {notification?.project_id?.project_name}
+                      </p>
+                      <p>{notification?.message}</p>
+                    </div>
+                  </li>
+                ))
+              ) : (
+                <p className="font-bold text-center mt-5">
+                  No notifications to show
+                </p>
+              )}
             </ul>
             <Link
               to={"/notifications"}

@@ -119,21 +119,37 @@ const Notifications = () => {
     {
       header: "owner Name",
       render: (row) => (
-        <p className={`flex items-center`}>{row?.client_id?.name || "__"}</p>
+        <p
+          className={`flex items-center ${
+            row?.action_status ? "text-green-500 line-through" : "text-black "
+          }`}
+        >
+          {row?.client_id?.name || "__"}
+        </p>
       ),
     },
     {
       header: "project Name",
       render: (row) => (
-        <p className={`flex items-center`}>
+        <p
+          className={`flex items-center ${
+            row?.action_status ? "text-green-500 line-through" : "text-black "
+          }`}
+        >
           {row?.project_id?.project_name || "__"}
         </p>
       ),
     },
     {
-      header: "Date",
+      header: "Task date ",
       render: (row) => (
-        <p className={`flex items-center`}>{formattedDate(row?.date)}</p>
+        <p
+          className={`flex items-center ${
+            row?.action_status ? "text-green-500 line-through" : "text-black "
+          }`}
+        >
+          {formattedDate(row?.execution_date)}
+        </p>
       ),
     },
   ];

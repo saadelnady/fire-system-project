@@ -19,19 +19,19 @@ function App() {
   const { isDark } = useSelector((state) => state.modeReducer);
   const { isLoggedIn } = useSelector((state) => state.userReducer);
 
-  // const [socket, setSocket] = useState(null);
-  // const [user, setUser] = useState("");
-  // useEffect(() => {
-  //   if (isLoggedIn) {
-  //     socket?.on("notification", (message) =>
-  //       showToast(toast, message, "success")
-  //     );
-  //   }
-  // }, [socket, user]);
+  const [socket, setSocket] = useState(null);
+  const [user, setUser] = useState("");
+  useEffect(() => {
+    if (isLoggedIn) {
+      socket?.on("notification", (message) =>
+        showToast(toast, message, "success")
+      );
+    }
+  }, [socket, user]);
 
-  // useEffect(() => {
-  //   setSocket(io("https://api.fireeaglema.com/"));
-  // }, []);
+  useEffect(() => {
+    setSocket(io("https://api.fireeaglema.com/"));
+  }, []);
   console.log("Some Changes");
   return (
     <div className={`App  ${isDark ? "bg-gray-900" : "bg-white"}  `}>

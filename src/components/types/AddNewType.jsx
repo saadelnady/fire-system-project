@@ -13,7 +13,11 @@ const validationSchema = Yup.object().shape({
     .trim()
     .required("required.")
     .max(24, "length must be less than or equal to 24 characters long"),
-  description: Yup.string().required("required.").trim(),
+  description: Yup.string()
+    .required("required.")
+    .trim()
+    .min(2, "length must be 2 characters at least")
+    .max(50, "length must be less than or equal to 50 characters long"),
 });
 
 const AddNewType = ({
