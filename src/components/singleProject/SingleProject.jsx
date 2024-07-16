@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchProject } from "../../store/actions/projects/projectActions";
@@ -8,6 +8,9 @@ import pdfImg from "../../assets/imgs/PDF_file_icon.svg.png";
 import axios from "axios";
 import { serverUrl } from "../../API/API";
 import { toast } from "react-toastify";
+import WarningLayOut from "../shared/WarningLayOut";
+import userImg from "../../assets/imgs/ic-user.png";
+import formattedDate from "../../helpers/formattedDate";
 
 const SingleProject = () => {
   const { isDark } = useSelector((state) => state.modeReducer);
@@ -21,21 +24,16 @@ const SingleProject = () => {
     dispatch(fetchProject(projectId));
   }, [dispatch]);
   console.log(project);
-  // console.log(error);
-  const formatDate = (date) => {
-    const dateObj = new Date(date);
-    const year = dateObj.getUTCFullYear();
-    const month = (dateObj.getUTCMonth() + 1).toString().padStart(2, "0");
-    const day = dateObj.getUTCDate().toString().padStart(2, "0");
-    const formattedDate = `${year}-${month}-${day}`;
-    return formattedDate;
-  };
 
-  const handleDeleteAttachment = async (file, projectId) => {
+  const [activeModal, setActiveModel] = useState(false);
+  const activeModalHandler = () => {
+    setActiveModel(!activeModal);
+  };
+  const handleDeleteAttachment = async (file, project) => {
     try {
       const response = await axios({
         method: "patch",
-        url: `${serverUrl}/v1/projects/attachments/delete/${projectId}`,
+        url: `${serverUrl}/v1/projects/attachments/delete/${project?._id}`,
         headers: {
           token: localStorage.getItem("TOKEN"),
         },
@@ -46,7 +44,7 @@ const SingleProject = () => {
 
       if (response.status === 200) {
         toast.success("Attachment deleted successfully");
-        dispatch(fetchProject(projectId));
+        dispatch(fetchProject(project?._id));
       } else {
         console.error("Failed to delete attachment:", response.statusText);
       }
@@ -56,7 +54,7 @@ const SingleProject = () => {
     }
   };
   return (
-    <section>
+    <section className="relative">
       {isLoading ? (
         <Loading />
       ) : (
@@ -70,7 +68,7 @@ const SingleProject = () => {
               <div className="flex flex-col lg:flex-row  md:items-start p-4 h-full">
                 <div className=" h-full w-80 lg:w-1/2 flex  lg:justify-start">
                   <img
-                    src={project?.project_img}
+                    src={project?.project_img || userImg}
                     alt=""
                     className="  h-full  w-3/4 sm:w-full   rounded-lg shadow-lg border-2 border-gray-200"
                   />
@@ -115,26 +113,28 @@ const SingleProject = () => {
               >
                 <div className={`${isDark ? "text-white" : "text-black"}`}>
                   <h2 className="text-lg font-semibold">CD exp date : </h2>
-                  <p>{formatDate(project?.contract_expiry_date)}</p>
+                  <p>{formattedDate(project?.contract_expiry_date) || "__"}</p>
                 </div>
                 <div className={`${isDark ? "text-white" : "text-black"}`}>
-                  <h2 className="text-lg font-semibold">
-                    internal exp date :{" "}
-                  </h2>
+                  <h2 className="text-lg font-semibold">internal exp date :</h2>
 
-                  <p>{formatDate(project?.internal_contract_date)}</p>
+                  <p>
+                    {formattedDate(project?.internal_contract_date) || "__"}
+                  </p>
                 </div>
                 <div className={`${isDark ? "text-white" : "text-black"}`}>
                   <h2 className="text-lg font-semibold">
                     Stickers exp date :{" "}
                   </h2>
 
-                  <p>{formatDate(project?.stickers)}</p>
+                  <p>{formattedDate(project?.stickers)}</p>
                 </div>
                 <div className={`${isDark ? "text-white" : "text-black"}`}>
                   <h2 className="text-lg font-semibold">Hasantak exp date :</h2>
 
-                  <p>{formatDate(project?.hasantak_certificate_date)}</p>
+                  <p>
+                    {formattedDate(project?.hasantak_certificate_date) || "__"}
+                  </p>
                 </div>
               </div>
             </div>
@@ -152,21 +152,21 @@ const SingleProject = () => {
               >
                 <div className={`${isDark ? "text-white" : "text-black"}`}>
                   <h2 className="text-lg font-semibold">First visit date : </h2>
-                  <p>{formatDate(project?.first_visit)}</p>
+                  <p>{formattedDate(project?.first_visit) || "__"}</p>
                 </div>
                 <div className={`${isDark ? "text-white" : "text-black"}`}>
                   <h2 className="text-lg font-semibold">
                     Second visit date :{" "}
                   </h2>
-                  <p>{formatDate(project?.second_visit)}</p>
+                  <p>{formattedDate(project?.second_visit) || "__"}</p>
                 </div>
                 <div className={`${isDark ? "text-white" : "text-black"}`}>
                   <h2 className="text-lg font-semibold">Third visit date : </h2>
-                  <p>{formatDate(project?.third_visit)}</p>
+                  <p>{formattedDate(project?.third_visit)}</p>
                 </div>
                 <div className={`${isDark ? "text-white" : "text-black"}`}>
                   <h2 className="text-lg font-semibold">Fourth visit date :</h2>
-                  <p>{formatDate(project?.fourth_visit)}</p>
+                  <p>{formattedDate(project?.fourth_visit) || "__"}</p>
                 </div>
               </div>
             </div>
@@ -184,18 +184,20 @@ const SingleProject = () => {
                   <h2 className="text-lg font-semibold">
                     ISTEFA Certificate :{" "}
                   </h2>
-                  <p>{project?.istefa_certificate}</p>
+                  <p>{project?.istefa_certificate || "__"}</p>
                 </div>
                 <div className={`${isDark ? "text-white" : "text-black"}`}>
                   <h2 className="text-lg font-semibold">ISTEFA exp date : </h2>
-                  <p>{formatDate(project?.istefa_certificate_date)}</p>
+                  <p>
+                    {formattedDate(project?.istefa_certificate_date) || "__"}
+                  </p>
                 </div>
               </div>
             </div>
           </div>
 
           {project?.attachments && project?.attachments.length > 0 && (
-            <div className="flex flex-wrap md:flex-nowrap space-x-0 md:space-x-4 mt-8 mb-8">
+            <div className="flex flex-wrap md:flex-nowrap space-x-0 md:space-x-4 mb-8">
               <div
                 className={`w-full ${isDark ? "bg-gray-800" : "bg-gray-100"} ${
                   isDark ? "text-white" : "text-black"
@@ -210,11 +212,11 @@ const SingleProject = () => {
                     <h2 className="text-2xl font-semibold mb-4">
                       Download Project Attachments
                     </h2>
-                    <ul className="flex justify-center gap-x-10">
+                    <ul className="flex justify-between ">
                       {project?.attachments.map((file, index) => (
                         <li
                           key={index}
-                          className="flex flex-col items-center rounded-lg space-y-2"
+                          className="flex flex-col items-center rounded-lg space-y-2 me-3"
                         >
                           {file.endsWith(".pdf") ? (
                             <a
@@ -264,7 +266,7 @@ const SingleProject = () => {
                           <button
                             className="text-blue-500 hover:text-blue-700 font-semibold flex items-center justify-between"
                             onClick={() => {
-                              handleDeleteAttachment(file, project);
+                              activeModalHandler();
                             }}
                           >
                             <svg
@@ -294,6 +296,15 @@ const SingleProject = () => {
                             </svg>
                             Delete
                           </button>
+                          {activeModal && (
+                            <WarningLayOut
+                              activeModal={activeModal}
+                              activeModalHandler={activeModalHandler}
+                              handleDelete={() => {
+                                handleDeleteAttachment(file, project);
+                              }}
+                            />
+                          )}
                         </li>
                       ))}
                     </ul>
@@ -379,7 +390,7 @@ const SingleProject = () => {
                             {payment.balance_amount}
                           </td>
                           <td className="px-6 py-4 whitespace-nowrap">
-                            {formatDate(payment.balance_date)}
+                            {formattedDate(payment.balance_date)}
                           </td>
 
                           <td className="px-6 py-4 whitespace-nowrap">

@@ -25,19 +25,7 @@ const Payments = () => {
   // pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
-  // const owners = {
-  //   list: [
-  //     {
-  //       id: 1,
-  //       profile_img: img1111,
-  //       name: "ahmed belal",
-  //       email: "ahmed@ahmed.com",
-  //       total: 10000,
-  //       received: 5000,
-  //       balance: 5000,
-  //     },
-  //   ],
-  // };
+
   useEffect(() => {
     dispatch(
       fetchPayments({
