@@ -18,6 +18,7 @@ export const fetchNotifications = ({
       if (page) params.append("page", page);
       if (search) params.append("search", search);
       params.append("send_status", true);
+      params.append("notification_type", "alert");
       const response = await getData(`/v1/notifications/?${params.toString()}`);
       dispatch(actionsCreators.getNotificationsSuccess(response));
     } catch (error) {
@@ -46,6 +47,7 @@ export const fetchDropdownNotifications = ({
       if (search) params.append("search", search);
       params.append("action_status", false);
       params.append("send_status", true);
+      params.append("notification_type", "alert");
       const response = await getData(`/v1/notifications/?${params.toString()}`);
       dispatch(actionsCreators.getNotificationsDropdownSuccess(response));
     } catch (error) {
