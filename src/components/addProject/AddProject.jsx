@@ -435,7 +435,8 @@ const AddProject = () => {
     ),
   };
 
-  const addNewRow = () => {
+  const addNewRow = (e) => {
+    e.preventDefault();
     formik.setFieldValue("balances", [
       ...formik.values.balances,
       { balance_amount: 0, balance_date: "" },

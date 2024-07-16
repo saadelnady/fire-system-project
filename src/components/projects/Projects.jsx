@@ -15,7 +15,7 @@ import {
 } from "../../store/actions/projects/projectActions";
 import formattedDate from "../../helpers/formattedDate";
 import WarningLayOut from "../shared/WarningLayOut";
-import { getData, serverUrl } from "../../API/API";
+import {  serverUrl } from "../../API/API";
 import axios from "axios";
 import Loading from "../shared/Loading/Loading";
 
