@@ -76,6 +76,9 @@ const SideBar = ({ isSidebarOpen, onBurgerClick }) => {
               location.pathname === "/" ? "bg-blue-300 text-white" : ""
             }`}
             to="/"
+            onClick={() => {
+              onBurgerClick();
+            }}
           >
             <svg
               viewBox="0 0 24 24"
@@ -170,6 +173,9 @@ const SideBar = ({ isSidebarOpen, onBurgerClick }) => {
                     : ""
                 }`}
                 to="/owners"
+                onClick={() => {
+                  onBurgerClick();
+                }}
               >
                 All owners
               </Link>
@@ -182,6 +188,9 @@ const SideBar = ({ isSidebarOpen, onBurgerClick }) => {
                     ? "bg-blue-300 text-white"
                     : ""
                 }`}
+                onClick={() => {
+                  onBurgerClick();
+                }}
               >
                 Add new owner
               </Link>
@@ -270,6 +279,9 @@ const SideBar = ({ isSidebarOpen, onBurgerClick }) => {
                     : ""
                 }`}
                 to="/projects"
+                onClick={() => {
+                  onBurgerClick();
+                }}
               >
                 All Projects
               </Link>
@@ -277,6 +289,9 @@ const SideBar = ({ isSidebarOpen, onBurgerClick }) => {
             <li className=" ms-3 mt-2">
               <Link
                 to="/addproject"
+                onClick={() => {
+                  onBurgerClick();
+                }}
                 className={`font-bold text-l flex items-center px-3 py-2 rounded ${
                   location.pathname === "/addproject"
                     ? "bg-blue-300 text-white"
@@ -294,6 +309,9 @@ const SideBar = ({ isSidebarOpen, onBurgerClick }) => {
               location.pathname === "/types" ? "bg-blue-300 text-white" : ""
             }`}
             to="/types"
+            onClick={() => {
+              onBurgerClick();
+            }}
           >
             <svg
               viewBox="0 0 48 48"
@@ -316,6 +334,9 @@ const SideBar = ({ isSidebarOpen, onBurgerClick }) => {
               location.pathname === "/payments" ? "bg-blue-300 text-white" : ""
             }`}
             to="/payments"
+            onClick={() => {
+              onBurgerClick();
+            }}
           >
             <svg
               height="30px"

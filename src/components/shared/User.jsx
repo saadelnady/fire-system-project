@@ -58,6 +58,9 @@ const User = () => {
               className={`flex items-center px-4 py-2 hover:text-black ${
                 isDark ? "hover:bg-gray-900" : "hover:bg-gray-100"
               } `}
+              onClick={() => {
+                toggleDropdown();
+              }}
             >
               <svg
                 width="30px"

@@ -107,6 +107,9 @@ const NotificationsDropDown = () => {
             </ul>
             <Link
               to={"/notifications"}
+              onClick={() => {
+                toggleDropdown();
+              }}
               className="bg-blue-500 text-white mt-3 block text-center  w-fit mx-auto py-3 px-2 rounded"
             >
               View All Notifications

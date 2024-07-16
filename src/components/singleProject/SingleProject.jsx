@@ -1,53 +1,71 @@
-
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchProject } from "../../store/actions/projects/projectActions";
 import Loading from "../shared/Loading/Loading";
-import { saveAs } from 'file-saver';
-import pdfImg from '../../assets/imgs/PDF_file_icon.svg.png'
+import { saveAs } from "file-saver";
+import pdfImg from "../../assets/imgs/PDF_file_icon.svg.png";
+import axios from "axios";
+import { serverUrl } from "../../API/API";
+import { toast } from "react-toastify";
 
 const SingleProject = () => {
   const { isDark } = useSelector((state) => state.modeReducer);
   const { projectId } = useParams();
-  const { isLoading, project, error } = useSelector((state) => state.projectReducer);
+  const { isLoading, project, error } = useSelector(
+    (state) => state.projectReducer
+  );
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(
-      fetchProject(projectId)
-    );
+    dispatch(fetchProject(projectId));
   }, [dispatch]);
   console.log(project);
   // console.log(error);
-  ;
-
   const formatDate = (date) => {
     const dateObj = new Date(date);
     const year = dateObj.getUTCFullYear();
-    const month = (dateObj.getUTCMonth() + 1).toString().padStart(2, '0');
-    const day = dateObj.getUTCDate().toString().padStart(2, '0');
+    const month = (dateObj.getUTCMonth() + 1).toString().padStart(2, "0");
+    const day = dateObj.getUTCDate().toString().padStart(2, "0");
     const formattedDate = `${year}-${month}-${day}`;
     return formattedDate;
-  }
+  };
 
-  const downloadFile = (url, filename) => {
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const handleDeleteAttachment = async (file, projectId) => {
+    try {
+      const response = await axios({
+        method: "patch",
+        url: `${serverUrl}/v1/projects/attachments/delete/${projectId}`,
+        headers: {
+          token: localStorage.getItem("TOKEN"),
+        },
+        data: {
+          file, // Assuming the file object needs to be sent to identify which file to delete
+        },
+      });
+
+      if (response.status === 200) {
+        toast.success("Attachment deleted successfully");
+        dispatch(fetchProject(projectId));
+      } else {
+        console.error("Failed to delete attachment:", response.statusText);
+      }
+    } catch (error) {
+      // Handle errors appropriately
+      console.error("Error deleting attachment:", error);
+    }
   };
   return (
-
     <section>
-      {isLoading ? <Loading /> :
+      {isLoading ? (
+        <Loading />
+      ) : (
         <section>
           <div className="flex flex-wrap md:flex-nowrap space-x-0 md:space-x-4 mt-8 mb-8">
             <div
-              className={`w-full md:w-1/2 ${isDark ? "bg-" : "bg-gray-100"} ${isDark ? "text-white" : "text-black"
-                } border-4 rounded p-4 `}
+              className={`w-full md:w-1/2 ${isDark ? "bg-" : "bg-gray-100"} ${
+                isDark ? "text-white" : "text-black"
+              } border-4 rounded p-4 `}
             >
               <div className="flex flex-col lg:flex-row  md:items-start p-4 h-full">
                 <div className=" h-full w-80 lg:w-1/2 flex  lg:justify-start">
@@ -58,8 +76,9 @@ const SingleProject = () => {
                   />
                 </div>
                 <div
-                  className={`w-full lg:w-1/2 mt-4 md:mt-0 md:ml-4 p-4 ${isDark ? "bg-gray-100" : "bg-gray-800"
-                    }shadow-md rounded-lg space-y-4`}
+                  className={`w-full lg:w-1/2 mt-4 md:mt-0 md:ml-4 p-4 ${
+                    isDark ? "bg-gray-100" : "bg-gray-800"
+                  }shadow-md rounded-lg space-y-4`}
                 >
                   <div className={`${isDark ? "text-white" : "text-black"}`}>
                     <h2 className="text-lg font-semibold">Project Name : </h2>
@@ -85,24 +104,30 @@ const SingleProject = () => {
               </div>
             </div>
             <div
-              className={`w-full md:w-1/2 ${isDark ? "bg-" : "bg-gray-100"} ${isDark ? "text-white" : "text-black"
-                } border-4 rounded p-4 mt-4 md:mt-0`}
+              className={`w-full md:w-1/2 ${isDark ? "bg-" : "bg-gray-100"} ${
+                isDark ? "text-white" : "text-black"
+              } border-4 rounded p-4 mt-4 md:mt-0`}
             >
               <div
-                className={`w-full lg:w-1/2 mt-4 md:mt-0 md:ml-4 p-4 ${isDark ? "bg-gray-100" : "bg-gray-800"
-                  }shadow-md rounded-lg space-y-4`}
+                className={`w-full lg:w-1/2 mt-4 md:mt-0 md:ml-4 p-4 ${
+                  isDark ? "bg-gray-100" : "bg-gray-800"
+                }shadow-md rounded-lg space-y-4`}
               >
                 <div className={`${isDark ? "text-white" : "text-black"}`}>
                   <h2 className="text-lg font-semibold">CD exp date : </h2>
                   <p>{formatDate(project?.contract_expiry_date)}</p>
                 </div>
                 <div className={`${isDark ? "text-white" : "text-black"}`}>
-                  <h2 className="text-lg font-semibold">internal exp date : </h2>
+                  <h2 className="text-lg font-semibold">
+                    internal exp date :{" "}
+                  </h2>
 
                   <p>{formatDate(project?.internal_contract_date)}</p>
                 </div>
                 <div className={`${isDark ? "text-white" : "text-black"}`}>
-                  <h2 className="text-lg font-semibold">Stickers exp date : </h2>
+                  <h2 className="text-lg font-semibold">
+                    Stickers exp date :{" "}
+                  </h2>
 
                   <p>{formatDate(project?.stickers)}</p>
                 </div>
@@ -110,26 +135,29 @@ const SingleProject = () => {
                   <h2 className="text-lg font-semibold">Hasantak exp date :</h2>
 
                   <p>{formatDate(project?.hasantak_certificate_date)}</p>
-
                 </div>
               </div>
             </div>
           </div>
           <div className="flex flex-wrap md:flex-nowrap space-x-0 md:space-x-4 mt-8 mb-8">
             <div
-              className={`w-full md:w-1/2 ${isDark ? "bg-" : "bg-gray-100"} ${isDark ? "text-white" : "text-black"
-                } border-4 rounded p-4 mt-4 md:mt-0`}
+              className={`w-full md:w-1/2 ${isDark ? "bg-" : "bg-gray-100"} ${
+                isDark ? "text-white" : "text-black"
+              } border-4 rounded p-4 mt-4 md:mt-0`}
             >
               <div
-                className={`w-full lg:w-1/2 mt-4 md:mt-0 md:ml-4 p-4 ${isDark ? "bg-gray-100" : "bg-gray-800"
-                  }shadow-md rounded-lg space-y-4`}
+                className={`w-full lg:w-1/2 mt-4 md:mt-0 md:ml-4 p-4 ${
+                  isDark ? "bg-gray-100" : "bg-gray-800"
+                }shadow-md rounded-lg space-y-4`}
               >
                 <div className={`${isDark ? "text-white" : "text-black"}`}>
                   <h2 className="text-lg font-semibold">First visit date : </h2>
                   <p>{formatDate(project?.first_visit)}</p>
                 </div>
                 <div className={`${isDark ? "text-white" : "text-black"}`}>
-                  <h2 className="text-lg font-semibold">Second visit date : </h2>
+                  <h2 className="text-lg font-semibold">
+                    Second visit date :{" "}
+                  </h2>
                   <p>{formatDate(project?.second_visit)}</p>
                 </div>
                 <div className={`${isDark ? "text-white" : "text-black"}`}>
@@ -143,15 +171,19 @@ const SingleProject = () => {
               </div>
             </div>
             <div
-              className={`w-full md:w-1/2 ${isDark ? "bg-" : "bg-gray-100"} ${isDark ? "text-white" : "text-black"
-                } border-4 rounded p-4 mt-4 md:mt-0`}
+              className={`w-full md:w-1/2 ${isDark ? "bg-" : "bg-gray-100"} ${
+                isDark ? "text-white" : "text-black"
+              } border-4 rounded p-4 mt-4 md:mt-0`}
             >
               <div
-                className={`w-full lg:w-1/2 mt-4 md:mt-0 md:ml-4 p-4 ${isDark ? "bg-gray-100" : "bg-gray-800"
-                  }shadow-md rounded-lg space-y-4`}
+                className={`w-full lg:w-1/2 mt-4 md:mt-0 md:ml-4 p-4 ${
+                  isDark ? "bg-gray-100" : "bg-gray-800"
+                }shadow-md rounded-lg space-y-4`}
               >
                 <div className={`${isDark ? "text-white" : "text-black"}`}>
-                  <h2 className="text-lg font-semibold">ISTEFA Certificate : </h2>
+                  <h2 className="text-lg font-semibold">
+                    ISTEFA Certificate :{" "}
+                  </h2>
                   <p>{project?.istefa_certificate}</p>
                 </div>
                 <div className={`${isDark ? "text-white" : "text-black"}`}>
@@ -165,16 +197,31 @@ const SingleProject = () => {
           {project?.attachments && project?.attachments.length > 0 && (
             <div className="flex flex-wrap md:flex-nowrap space-x-0 md:space-x-4 mt-8 mb-8">
               <div
-                className={`w-full ${isDark ? "bg-gray-800" : "bg-gray-100"} ${isDark ? "text-white" : "text-black"} border-4 rounded p-4 mt-4 md:mt-0`}
+                className={`w-full ${isDark ? "bg-gray-800" : "bg-gray-100"} ${
+                  isDark ? "text-white" : "text-black"
+                } border-4 rounded p-4 mt-4 md:mt-0`}
               >
-                <div className={`${isDark ? "bg-gray-800" : "bg-gray-100"} ${isDark ? "text-white" : "text-black"}`}>
+                <div
+                  className={`${isDark ? "bg-gray-800" : "bg-gray-100"} ${
+                    isDark ? "text-white" : "text-black"
+                  }`}
+                >
                   <div className="w-full max-w-md rounded-lg p-6">
-                    <h2 className="text-2xl font-semibold mb-4">Download Project Attachments</h2>
+                    <h2 className="text-2xl font-semibold mb-4">
+                      Download Project Attachments
+                    </h2>
                     <ul className="flex justify-center gap-x-10">
                       {project?.attachments.map((file, index) => (
-                        <li key={index} className="flex flex-col items-center rounded-lg space-y-2">
+                        <li
+                          key={index}
+                          className="flex flex-col items-center rounded-lg space-y-2"
+                        >
                           {file.endsWith(".pdf") ? (
-                            <a href={file} target="_blank" rel="noopener noreferrer">
+                            <a
+                              href={file}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
                               <img
                                 src={pdfImg}
                                 alt="PDF"
@@ -182,7 +229,11 @@ const SingleProject = () => {
                               />
                             </a>
                           ) : (
-                            <a href={file} target="_blank" rel="noopener noreferrer">
+                            <a
+                              href={file}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
                               <img
                                 src={file}
                                 alt=""
@@ -210,6 +261,39 @@ const SingleProject = () => {
                             </svg>
                             Download
                           </button>
+                          <button
+                            className="text-blue-500 hover:text-blue-700 font-semibold flex items-center justify-between"
+                            onClick={() => {
+                              handleDeleteAttachment(file, project);
+                            }}
+                          >
+                            <svg
+                              viewBox="0 0 16 16"
+                              version="1.1"
+                              xmlns="http://www.w3.org/2000/svg"
+                              width="15px"
+                              height="15px"
+                              fill="#3f83f8"
+                              className="cursor-pointer w-6 h-6 mr-1 text-blue-500 hover:text-blue-700 "
+                            >
+                              <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+                              <g
+                                id="SVGRepo_tracerCarrier"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              ></g>
+                              <g id="SVGRepo_iconCarrier">
+                                <rect
+                                  width="16"
+                                  height="16"
+                                  id="icon-bound"
+                                  fill="none"
+                                ></rect>
+                                <polygon points="14.707,2.707 13.293,1.293 8,6.586 2.707,1.293 1.293,2.707 6.586,8 1.293,13.293 2.707,14.707 8,9.414 13.293,14.707 14.707,13.293 9.414,8 "></polygon>{" "}
+                              </g>
+                            </svg>
+                            Delete
+                          </button>
                         </li>
                       ))}
                     </ul>
@@ -219,21 +303,20 @@ const SingleProject = () => {
             </div>
           )}
 
-
-
           <div className="flex flex-wrap md:flex-nowrap space-x-0 md:space-x-4 mt-8 mb-8">
             <div
-              className={`w-full md:w-1/3 ${isDark ? "bg-" : "bg-gray-100"} ${isDark ? "text-white" : "text-black"
-                } border-4 rounded p-4 mt-4 md:mt-0`}
+              className={`w-full md:w-1/3 ${isDark ? "bg-" : "bg-gray-100"} ${
+                isDark ? "text-white" : "text-black"
+              } border-4 rounded p-4 mt-4 md:mt-0`}
             >
               <div
-                className={`w-full lg:w-1/2 mt-4 md:mt-0 md:ml-4 p-4 ${isDark ? "bg-gray-100" : "bg-gray-800"
-                  }shadow-md rounded-lg space-y-4`}
+                className={`w-full lg:w-1/2 mt-4 md:mt-0 md:ml-4 p-4 ${
+                  isDark ? "bg-gray-100" : "bg-gray-800"
+                }shadow-md rounded-lg space-y-4`}
               >
                 <div className={`${isDark ? "text-white" : "text-black"}`}>
                   <h2 className="text-lg font-semibold">Total : </h2>
                   <p>{project?.payment && project?.payment.payment}</p>
-
                 </div>
                 <div className={`${isDark ? "text-white" : "text-black"}`}>
                   <h2 className="text-lg font-semibold">Received : </h2>
@@ -241,20 +324,27 @@ const SingleProject = () => {
                 </div>
                 <div className={`${isDark ? "text-white" : "text-black"}`}>
                   <h2 className="text-lg font-semibold">Balance : </h2>
-                  <p>{project?.payment && (project?.payment.payment - project?.payment.received)}</p>
+                  <p>
+                    {project?.payment &&
+                      project?.payment.payment - project?.payment.received}
+                  </p>
                 </div>
               </div>
             </div>
             <div
-              className={`w-full md:w-2/3 ${isDark ? "bg-" : "bg-gray-100"} ${isDark ? "text-white" : "text-black"
-                } border-4 rounded p-4 mt-4 md:mt-0`}
+              className={`w-full md:w-2/3 ${isDark ? "bg-" : "bg-gray-100"} ${
+                isDark ? "text-white" : "text-black"
+              } border-4 rounded p-4 mt-4 md:mt-0`}
             >
               <div
-                className={`w-full lg:w-1/2 mt-4 md:mt-0 md:ml-4 p-4 ${isDark ? "bg-gray-100" : "bg-gray-800"
-                  }shadow-md rounded-lg space-y-4`}
+                className={`w-full lg:w-1/2 mt-4 md:mt-0 md:ml-4 p-4 ${
+                  isDark ? "bg-gray-100" : "bg-gray-800"
+                }shadow-md rounded-lg space-y-4`}
               >
                 <table className="min-w-full divide-y divide-gray-100">
-                  <thead className={`${isDark ? "bg-gray-800" : "bg-gray-100"}`}>
+                  <thead
+                    className={`${isDark ? "bg-gray-800" : "bg-gray-100"}`}
+                  >
                     <tr className={`${isDark ? "bg-gray-800" : "bg-gray-100"}`}>
                       <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                         ID
@@ -272,33 +362,40 @@ const SingleProject = () => {
                     </tr>
                   </thead>
                   <tbody className="bg-white divide-y divide-gray-200">
-                    {project?.payment && project?.payment && project?.payment && project?.payment.balances.map((payment, index) => (
-                      <tr
-                        key={payment._id}
-                        className={`${isDark ? "bg-gray-800" : "bg-gray-100"}`}
-                      >
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {index + 1}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {payment.balance_amount}
-                        </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {formatDate(payment.balance_date)}
+                    {project?.payment &&
+                      project?.payment &&
+                      project?.payment &&
+                      project?.payment.balances.map((payment, index) => (
+                        <tr
+                          key={payment._id}
+                          className={`${
+                            isDark ? "bg-gray-800" : "bg-gray-100"
+                          }`}
+                        >
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            {index + 1}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            {payment.balance_amount}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            {formatDate(payment.balance_date)}
+                          </td>
 
-                        </td>
-
-                        <td className="px-6 py-4 whitespace-nowrap">
-                          {payment.balance_status === true ? "paid" : "not paid"}
-                        </td>
-                      </tr>
-                    ))}
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            {payment.balance_status === true
+                              ? "paid"
+                              : "not paid"}
+                          </td>
+                        </tr>
+                      ))}
                   </tbody>
                 </table>
               </div>
             </div>
           </div>
-        </section>}
+        </section>
+      )}
     </section>
   );
 };
