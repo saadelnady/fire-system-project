@@ -29,7 +29,7 @@ const validationSchema = (params) => {
       received: Yup.number().min(0).required("Received is required"),
       balances: Yup.array().of(
         Yup.object().shape({
-          balance_amount: Yup.number().moreThan(
+          balance_amount: Yup.number().min(
             0,
             "Balance amount must be greater than 0"
           ),
