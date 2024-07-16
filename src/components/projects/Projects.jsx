@@ -138,13 +138,13 @@ const Projects = () => {
     {
       header: "payment",
       render: (row) => (
-        <p className={` text-center`}>{row?.payment?.payment}</p>
+        <p className={` text-center`}>{row?.payment?.payment || "__"}</p>
       ),
     },
     {
       header: "received",
       render: (row) => (
-        <p className={` text-center`}>{row?.payment?.received}</p>
+        <p className={` text-center`}>{row?.payment?.received || "__"}</p>
       ),
     },
     // {
@@ -155,52 +155,60 @@ const Projects = () => {
       header: "CD exp date",
       render: (row) => (
         <p className={` text-center`}>
-          {formattedDate(row?.contract_expiry_date)}
+          {formattedDate(row?.contract_expiry_date) || "__"}
         </p>
       ),
     },
     {
       header: "istefa_certificate",
       render: (row) => (
-        <p className={` text-center`}>{row?.istefa_certificate}</p>
+        <p className={` text-center`}>{row?.istefa_certificate || "__"}</p>
       ),
     },
     {
       header: "first visit",
       render: (row) => (
-        <p className={` text-center`}>{formattedDate(row?.first_visit)}</p>
+        <p className={` text-center`}>
+          {formattedDate(row?.first_visit) || "__"}
+        </p>
       ),
     },
     {
       header: "second visit",
       render: (row) => (
-        <p className={` text-center`}>{formattedDate(row?.second_visit)}</p>
+        <p className={` text-center`}>
+          {formattedDate(row?.second_visit) || "__"}
+        </p>
       ),
     },
     {
       header: "third visit",
       render: (row) => (
-        <p className={` text-center`}>{formattedDate(row?.third_visit)}</p>
+        <p className={` text-center`}>
+          {formattedDate(row?.third_visit) || "__"}
+        </p>
       ),
     },
     {
       header: "fourth visit",
       render: (row) => (
-        <p className={` text-center`}>{formattedDate(row?.fourth_visit)}</p>
+        <p className={` text-center`}>
+          {formattedDate(row?.fourth_visit) || "__"}
+        </p>
       ),
     },
 
     {
       header: "stickers",
       render: (row) => (
-        <p className={` text-center`}>{formattedDate(row?.stickers)}</p>
+        <p className={` text-center`}>{formattedDate(row?.stickers) || "__"}</p>
       ),
     },
     {
       header: "hasantak exp date",
       render: (row) => (
         <p className={` text-center`}>
-          {formattedDate(row?.hasantak_certificate_date || "__")}
+          {formattedDate(row?.hasantak_certificate_date) || "__"}
         </p>
       ),
     },
@@ -208,7 +216,7 @@ const Projects = () => {
       header: "istefa exp date",
       render: (row) => (
         <p className={` text-center`}>
-          {formattedDate(row?.istefa_certificate_date || "__")}
+          {formattedDate(row?.istefa_certificate_date) || "__"}
         </p>
       ),
     },
@@ -216,13 +224,15 @@ const Projects = () => {
       header: "internal contract exp date",
       render: (row) => (
         <p className={` text-center`}>
-          {formattedDate(row?.internal_contract_date || "__")}
+          {formattedDate(row?.internal_contract_date) || "__"}
         </p>
       ),
     },
     {
       header: "file number",
-      render: (row) => <p className={` text-center`}>{row?.file_number}</p>,
+      render: (row) => (
+        <p className={` text-center`}>{row?.file_number || "__"}</p>
+      ),
     },
     {
       header: "Attachments",

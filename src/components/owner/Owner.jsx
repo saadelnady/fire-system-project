@@ -125,21 +125,27 @@ const Owner = () => {
       ),
     },
     {
+      header: "old Ref Number",
+      render: (row) => (
+        <p className={` text-center`}>{row?.ref_number_old || "__"}</p>
+      ),
+    },
+    {
       header: "Ref Number",
       render: (row) => (
-        <p className="flex items-center">{row?.ref_number_old}</p>
+        <p className={` text-center`}>{row?.ref_number || "__"}</p>
       ),
     },
     {
       header: "payment",
       render: (row) => (
-        <p className={` text-center`}>{row?.payment?.payment}</p>
+        <p className={` text-center`}>{row?.payment?.payment || "__"}</p>
       ),
     },
     {
       header: "received",
       render: (row) => (
-        <p className={` text-center`}>{row?.payment?.received}</p>
+        <p className={` text-center`}>{row?.payment?.received || "__"}</p>
       ),
     },
     // {
@@ -149,32 +155,40 @@ const Owner = () => {
     {
       header: "first visit",
       render: (row) => (
-        <p className="flex items-center">{formattedDate(row?.first_visit)}</p>
+        <p className="flex items-center">
+          {formattedDate(row?.first_visit) || "__"}
+        </p>
       ),
     },
     {
       header: "second visit",
       render: (row) => (
-        <p className="flex items-center">{formattedDate(row?.second_visit)}</p>
+        <p className="flex items-center">
+          {formattedDate(row?.second_visit) || "__"}
+        </p>
       ),
     },
     {
       header: "third visit",
       render: (row) => (
-        <p className="flex items-center">{formattedDate(row?.third_visit)}</p>
+        <p className="flex items-center">
+          {formattedDate(row?.third_visit) || "__"}
+        </p>
       ),
     },
     {
       header: "fourth visit",
       render: (row) => (
-        <p className="flex items-center">{formattedDate(row?.fourth_visit)}</p>
+        <p className="flex items-center">
+          {formattedDate(row?.fourth_visit) || "__"}
+        </p>
       ),
     },
     {
       header: "expired date",
       render: (row) => (
         <p className="flex items-center">
-          {formattedDate(row?.contract_expiry_date)}
+          {formattedDate(row?.contract_expiry_date) || "__"}
         </p>
       ),
     },
@@ -182,14 +196,16 @@ const Owner = () => {
       header: "internal contract date",
       render: (row) => (
         <p className="flex items-center">
-          {formattedDate(row?.internal_contract_date)}
+          {formattedDate(row?.internal_contract_date) || "__"}
         </p>
       ),
     },
     {
       header: "stickers",
       render: (row) => (
-        <p className="flex items-center">{formattedDate(row?.stickers)}</p>
+        <p className="flex items-center">
+          {formattedDate(row?.stickers) || "__"}
+        </p>
       ),
     },
     {
