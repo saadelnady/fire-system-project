@@ -197,7 +197,7 @@ const SingleProject = () => {
           </div>
 
           {project?.attachments && project?.attachments.length > 0 && (
-            <div className="flex flex-wrap md:flex-nowrap space-x-0 md:space-x-4 mb-8">
+            <div className="flex flex-wrap md:flex-nowrap space-x-0 md:space-x-4 mt-8 mb-8">
               <div
                 className={`w-full ${isDark ? "bg-gray-800" : "bg-gray-100"} ${
                   isDark ? "text-white" : "text-black"

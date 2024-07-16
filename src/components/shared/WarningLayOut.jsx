@@ -12,14 +12,14 @@ const WarningLayOut = ({ activeModal, activeModalHandler, handleDelete }) => {
   return (
     <div
       id="modal-overlay"
-      className={`fixed top-0 left-0 z-100 w-full min-h-[100vh] flex justify-center items-center ${
+      className={`fixed top-0 left-0 z-100 w-full min-h-[100vh] flex justify-center items-center   ${
         activeModal ? "fade-in" : "fade-out"
       }`}
-      style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+      style={{ backgroundColor: "rgba(0, 0, 0, 0.5)", margin: "0px" }}
       onClick={handleClickOutside}
     >
       <div
-        className={` rounded-lg overflow-hidden shadow-xl transform transition-all max-w-lg w-full p-6  ${
+        className={` rounded-lg overflow-hidden shadow-xl transform transition-all max-w-lg w-full p-6  m-0 ${
           isDark ? "text-white bg-gray-800" : "text-black bg-gray-100"
         }`}
         onClick={(e) => e.stopPropagation()}
