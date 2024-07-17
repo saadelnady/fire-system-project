@@ -179,9 +179,15 @@ const AddProject = () => {
         values.balances.length === 1 &&
         values.balances[0].balance_amount > 0
       ) {
-        formData.append("balances", values.balances);
+        values.balances.forEach((balance)=>{
+          formData.append("balances", balance);
+
+        } )
       } else if (values.balances.length > 1) {
-        formData.append("balances", values.balances);
+        values.balances.forEach((balance)=>{
+          formData.append("balances",balance);
+
+        } )
       }
     }
 
