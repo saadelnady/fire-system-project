@@ -160,7 +160,7 @@ const Notifications = () => {
             row?.action_status ? "text-green-500 line-through" : "text-black "
           }`}
         >
-          {formattedDate(row?.date)}
+          {formattedDate(row?.createdAt)}
         </p>
       ),
     },
