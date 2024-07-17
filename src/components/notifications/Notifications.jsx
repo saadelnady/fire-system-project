@@ -152,6 +152,18 @@ const Notifications = () => {
         </p>
       ),
     },
+    {
+      header: "created date",
+      render: (row) => (
+        <p
+          className={`flex items-center ${
+            row?.action_status ? "text-green-500 line-through" : "text-black "
+          }`}
+        >
+          {formattedDate(row?.date)}
+        </p>
+      ),
+    },
   ];
   return (
     <div
