@@ -31,6 +31,8 @@ const Admin = () => {
     dispatch(checkUserLogin());
     if (isLoggedIn) {
       dispatch(fetchUserProfile());
+    } else {
+      localStorage.removeItem("TOKEN");
     }
   }, [isLoggedIn]);
   return (

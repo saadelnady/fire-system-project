@@ -208,15 +208,15 @@ const SingleProject = () => {
                     isDark ? "text-white" : "text-black"
                   }`}
                 >
-                  <div className="w-full max-w-md rounded-lg p-6">
+                  <div className="w-full   rounded-lg p-6">
                     <h2 className="text-2xl font-semibold mb-4">
                       Download Project Attachments
                     </h2>
-                    <ul className="flex justify-between ">
+                    <ul className="flex justify-start flex-wrap ">
                       {project?.attachments.map((file, index) => (
                         <li
                           key={index}
-                          className="flex flex-col items-center rounded-lg space-y-2 me-3"
+                          className="flex flex-col items-center rounded-lg space-y-2 m-3"
                         >
                           {file.endsWith(".pdf") ? (
                             <a
