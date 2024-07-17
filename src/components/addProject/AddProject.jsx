@@ -179,9 +179,9 @@ const AddProject = () => {
         values.balances.length === 1 &&
         values.balances[0].balance_amount > 0
       ) {
-        formData.append("balances", JSON.stringify(values.balances));
+        formData.append("balances", values.balances);
       } else if (values.balances.length > 1) {
-        formData.append("balances", JSON.stringify(values.balances));
+        formData.append("balances", values.balances);
       }
     }
 
