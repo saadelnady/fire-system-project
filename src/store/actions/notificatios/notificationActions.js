@@ -17,6 +17,7 @@ export const fetchNotifications = ({
       if (limit) params.append("limit", limit);
       if (page) params.append("page", page);
       if (search) params.append("search", search);
+      params.append("action_status", false);
       params.append("send_status", true);
       params.append("notification_type", "alert");
       const response = await getData(`/v1/notifications/?${params.toString()}`);

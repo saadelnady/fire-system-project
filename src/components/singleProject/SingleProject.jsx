@@ -15,13 +15,13 @@ import formattedDate from "../../helpers/formattedDate";
 const SingleProject = () => {
   const { isDark } = useSelector((state) => state.modeReducer);
   const { projectId } = useParams();
-  const { isLoading, project, error } = useSelector(
-    (state) => state.projectReducer
-  );
+  const { isLoading, project } = useSelector((state) => state.projectReducer);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(fetchProject(projectId));
+    if (projectId) {
+      dispatch(fetchProject(projectId));
+    }
   }, [dispatch]);
   console.log(project);
 
@@ -53,6 +53,16 @@ const SingleProject = () => {
       console.error("Error deleting attachment:", error);
     }
   };
+  const getFileName = (url) => {
+    const decodedUrl = decodeURIComponent(url);
+    const filenameWithPrefix = decodedUrl.substring(
+      decodedUrl.lastIndexOf("/") + 1
+    );
+    const match = filenameWithPrefix.match(/(\d+-\d+-)(.+)/);
+    const attachmentName = match ? match[2] : filenameWithPrefix;
+    return attachmentName;
+  };
+
   return (
     <section className="relative">
       {isLoading ? (
@@ -70,7 +80,7 @@ const SingleProject = () => {
                   <img
                     src={project?.project_img || userImg}
                     alt=""
-                    className="  h-full  w-3/4 sm:w-full   rounded-lg shadow-lg border-2 border-gray-200"
+                    className="  h-full  w-3/4 sm:w-full object-cover rounded-lg shadow-lg border-2 border-gray-200"
                   />
                 </div>
                 <div
@@ -213,10 +223,10 @@ const SingleProject = () => {
                       Download Project Attachments
                     </h2>
                     <ul className="flex justify-start flex-wrap ">
-                      {project?.attachments.map((file, index) => (
+                      {project?.attachments?.map((file, index) => (
                         <li
                           key={index}
-                          className="flex flex-col items-center rounded-lg space-y-2 m-3"
+                          className="flex flex-col items-center rounded-lg space-y-2 m-3 w-[45%]  "
                         >
                           {file.endsWith(".pdf") ? (
                             <a
@@ -243,6 +253,7 @@ const SingleProject = () => {
                               />
                             </a>
                           )}
+                          <p className="text-wrap ">{getFileName(file)}</p>
                           <button
                             onClick={() => saveAs(file, `attachment-${index}`)}
                             className="text-blue-500 hover:text-blue-700 font-semibold flex items-center"
@@ -348,7 +359,7 @@ const SingleProject = () => {
               } border-4 rounded p-4 mt-4 md:mt-0`}
             >
               <div
-                className={`w-full lg:w-1/2 mt-4 md:mt-0 md:ml-4 p-4 ${
+                className={`w-full lg:w-1/2  overflow-x-auto mt-4 md:mt-0 md:ml-4 p-4 ${
                   isDark ? "bg-gray-100" : "bg-gray-800"
                 }shadow-md rounded-lg space-y-4`}
               >

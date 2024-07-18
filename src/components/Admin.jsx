@@ -29,10 +29,12 @@ const Admin = () => {
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(checkUserLogin());
+  }, []);
+  useEffect(() => {
     if (isLoggedIn) {
       dispatch(fetchUserProfile());
     } else {
-      localStorage.removeItem("TOKEN");
+      console.log("error heree");
     }
   }, [isLoggedIn]);
   return (
