@@ -32,7 +32,7 @@ const handleRequest = async (method, URL, data = null, customHeaders = {}) => {
       toast.error(error?.response?.data?.message || "Server Error");
       throw new Error(error?.response?.data?.message || "Server Error");
     } else if (error?.request) {
-      toast.error("Network Error: Please check your connection");
+      // toast.error("Network Error: Please check your connection");
       throw new Error("Network Error: Please check your connection");
     } else {
       toast.error("An error occurred: " + error?.request);
