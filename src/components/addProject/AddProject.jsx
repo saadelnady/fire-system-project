@@ -345,19 +345,19 @@ const AddProject = () => {
     dispatch(
       fetchOwners({
         page: currentPage,
-        limit: itemsPerPage,
+        limit: 1000,
         search: searchTerm,
       })
     );
+    // to get types
     dispatch(
       fetchTypes({
         page: currentPage,
-        limit: itemsPerPage,
+        limit: 1000,
         search: searchTerm,
       })
     );
   }, []);
-  // to get types
 
   useEffect(() => {
     let total_balances = 0;
