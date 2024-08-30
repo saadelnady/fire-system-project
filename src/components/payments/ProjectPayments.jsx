@@ -10,6 +10,7 @@ import {
   chechPaymentPaid,
   fetchPayment,
 } from "../../store/actions/payments/paymentActions";
+import { useParams } from "react-router-dom";
 
 const ProjectPayments = () => {
   const { payment, isLoading } = useSelector((state) => state.paymentReducer);
@@ -17,7 +18,13 @@ const ProjectPayments = () => {
   const [isPopupOpen, setIsPopupOpen] = useState(false);
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const [targetPayment, setTargetPayment] = useState({});
+  const [targetProgectId, setTargetProjectId] = useState("");
+
+  const handleProjectId = (targetId) => {
+    setTargetProjectId(targetId);
+  };
   const dispatch = useDispatch();
+  const { ownerId } = useParams();
   const handlePopUpOpen = () => {
     setIsPopupOpen(!isPopupOpen);
   };
@@ -131,6 +138,16 @@ const ProjectPayments = () => {
         isDark ? "bg-gray-900 text-white" : "bg-white text-black "
       }`}
     >
+      {isPopupOpen && (
+        <AddPayment
+          project_id={targetProgectId}
+          handleProjectId={handleProjectId}
+          client_id={ownerId}
+          handlePopUpOpen={handlePopUpOpen}
+          targetPayment={targetPayment}
+          handleTargetPayment={handleTargetPayment}
+        />
+      )}
       <h2
         className={`text-2xl font-semibold mt-10 mb-5 ${
           isDark ? "text-white" : "text-black"
@@ -138,64 +155,62 @@ const ProjectPayments = () => {
       >
         Project Payments
       </h2>
-      {payment?.projects?.map((project) => (
-        <div className="mb-10">
-          <div className="flex justify-between items-center mb-4">
-            <button
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg"
-              onClick={handleAddNewPayment}
-            >
-              Add New Payment
-            </button>
-          </div>
-          {isPopupOpen && (
-            <AddPayment
-              project_id={project?.payment?.project_id}
-              client_id={project?.payment?.client_id}
-              handlePopUpOpen={handlePopUpOpen}
-              targetPayment={targetPayment}
-              handleTargetPayment={handleTargetPayment}
-            />
-          )}
+      {payment?.projects?.map((project) => {
+        console.log("project ===>", project);
 
-          {isDeletePopupOpen && (
-            <DeletePayment
-              targetPayment={targetPayment}
-              handleIsDeletePopupOpen={handleIsDeletePopupOpen}
-            />
-          )}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
-            <div>
-              <p className="font-semibold">Project Name:</p>
-              <p>{project?.project_name}</p>
+        return (
+          <div className="mb-10">
+            <div className="flex justify-between items-center mb-4">
+              <button
+                className="bg-blue-500 text-white px-4 py-2 rounded-lg"
+                onClick={() => {
+                  handleAddNewPayment();
+                  handleProjectId(project?._id);
+                }}
+              >
+                Add New Payment
+              </button>
             </div>
-            <div>
-              <p className="font-semibold">Total payment:</p>
-              <p>{project?.payment?.payment}</p>
-            </div>
-            <div>
-              <p className="font-semibold">total recieved:</p>
-              <p>{project?.payment?.received}</p>
-            </div>
-            <div>
-              <p className="font-semibold">total balances:</p>
-              <p>{project?.payment?.payment - +project?.payment?.received}</p>
-            </div>
-          </div>
-          <div
-            className={` ${
-              isDark ? "bg-gray-800" : "bg-gray-100"
-            } p-6 rounded-lg shadow-lg`}
-          >
-            <h2 className="text-2xl font-semibold mb-4">Payments</h2>
-            {isLoading ? (
-              <Loading />
-            ) : (
-              <Table cols={columns} rows={project?.payment?.balances} />
+
+            {isDeletePopupOpen && (
+              <DeletePayment
+                targetPayment={targetPayment}
+                handleIsDeletePopupOpen={handleIsDeletePopupOpen}
+              />
             )}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-5">
+              <div>
+                <p className="font-semibold">Project Name:</p>
+                <p>{project?.project_name}</p>
+              </div>
+              <div>
+                <p className="font-semibold">Total payment:</p>
+                <p>{project?.payment?.payment}</p>
+              </div>
+              <div>
+                <p className="font-semibold">total recieved:</p>
+                <p>{project?.payment?.received}</p>
+              </div>
+              <div>
+                <p className="font-semibold">total balances:</p>
+                <p>{project?.payment?.payment - +project?.payment?.received}</p>
+              </div>
+            </div>
+            <div
+              className={` ${
+                isDark ? "bg-gray-800" : "bg-gray-100"
+              } p-6 rounded-lg shadow-lg`}
+            >
+              <h2 className="text-2xl font-semibold mb-4">Payments</h2>
+              {isLoading ? (
+                <Loading />
+              ) : (
+                <Table cols={columns} rows={project?.payment?.balances} />
+              )}
+            </div>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };

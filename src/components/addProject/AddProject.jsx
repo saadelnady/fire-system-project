@@ -345,7 +345,7 @@ const AddProject = () => {
     dispatch(
       fetchOwners({
         page: currentPage,
-        limit: 1000,
+        limit: 10000,
         search: searchTerm,
       })
     );
@@ -353,7 +353,7 @@ const AddProject = () => {
     dispatch(
       fetchTypes({
         page: currentPage,
-        limit: 1000,
+        limit: 10000,
         search: searchTerm,
       })
     );

@@ -16,7 +16,10 @@ const DeletePayment = ({ targetPayment, handleIsDeletePopupOpen }) => {
     dispatch(fetchPayment(targetPayment?.client_id));
   };
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50">
+    <div
+      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-70 z-50"
+      style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
+    >
       <div className="bg-white p-6 rounded-lg shadow-lg w-full max-w-md">
         <h2 className="text-2xl font-semibold mb-4">Delete Payment</h2>
         <p className="mb-4">Are you sure you want to delete this payment?</p>

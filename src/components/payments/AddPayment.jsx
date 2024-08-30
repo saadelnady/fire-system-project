@@ -14,6 +14,7 @@ import { toast } from "react-toastify";
 const AddPayment = ({
   handlePopUpOpen,
   project_id,
+
   client_id,
   targetPayment,
   handleTargetPayment,
@@ -72,7 +73,8 @@ const AddPayment = ({
     <div>
       {
         <div
-          className={`fixed top-0 left-0 z-100 w-full min-h-[100vh] flex justify-center items-center  `}
+          className={`fixed top-0 left-0 z-100 w-full min-h-[100vh] flex justify-center items-center  bg-gray-900 `}
+          style={{ backgroundColor: "rgba(0, 0, 0, 0.5)" }}
         >
           <div
             className={`  p-6 rounded-lg shadow-lg w-full max-w-md ${
